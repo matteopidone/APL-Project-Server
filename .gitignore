@@ -562,3 +562,5 @@ FodyWeavers.xsd
 
 # Others
 config-commented.json
+
+build/
