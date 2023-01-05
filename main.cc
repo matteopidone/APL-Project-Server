@@ -6,24 +6,9 @@ int main() {
     
     //Load config file
     drogon::app().loadConfigFile("../config.json");
-    static std::shared_ptr<drogon::orm::DbClient> newMysqlClient('host=localhost dbname=apl connect_timeout=10 password=password', 1);
-    auto clientPtr = drogon::app().getDbClient();
-clientPtr->execSqlAsync("select * from users",
-                            [](const drogon::orm::Result &result) {
-                                std::cout << result.size() << " rows selected!" << std::endl;
-                                int i = 0;
-                                for (auto row : result)
-                                {
-                                    std::cout << i++ << ": user name is " << row["name"].as<std::string>() << std::endl;
-                                }
-                            },
-                            [](const std::exception &e) {
-                                std::cerr << "error:" << e.what() << std::endl;
-                            },
-                            "default");
     
     //Run HTTP framework,the method will block in the internal event loop
     drogon::app().run();
-
+    auto clientPtr = drogon::app().getDbClient("Matteo");
     return 0;
 }
