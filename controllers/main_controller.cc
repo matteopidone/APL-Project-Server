@@ -2,11 +2,15 @@
 
 void main_controller::asyncHandleHttpRequest(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback)
 {
-    //write your application logic here
-    auto resp=HttpResponse::newHttpResponse();
-    //NOTE: The enum constant below is named "k200OK" (as in 200 OK), not "k2000K".
-    resp->setStatusCode(k200OK);
-    resp->setContentTypeCode(CT_TEXT_HTML);
-    resp->setBody("Hello World!");
+    Json::Value json;
+    json["key1.1"] = "value1";
+    json["key1.2"] = 15;
+    
+    Json::Value body;
+    body["key0"] = "You are using main_controller";
+    body["key1"] = "Hello World !";
+    body["key2"] = json;
+
+    auto resp=HttpResponse::newHttpJsonResponse(body);
     callback(resp);
 }
