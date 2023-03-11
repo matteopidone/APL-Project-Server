@@ -1,5 +1,7 @@
 #include "User.h"
 
+using namespace models;
+
 // Constructor
 User::User(string email, string password, string name, string surname, string role) {
 	this->email = email;
