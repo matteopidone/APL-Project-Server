@@ -10,10 +10,8 @@ namespace models {
 			static orm::DbClientPtr database;
 
 		public:
-			// Constructor
-			Model();
-
 			// Getters
-			orm::DbClientPtr getDatabase() const;
+			static orm::DbClientPtr getDatabase();
+			static void setDatabase(orm::DbClientPtr & db);
 	};
 }

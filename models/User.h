@@ -1,11 +1,12 @@
 #pragma once
 
 #include <string>
+#include "Model.h"
 
 using namespace std;
 
 namespace models {
-	class User {
+	class User : public Model {
 		private:
 			string email;
 			string password;

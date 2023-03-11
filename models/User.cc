@@ -17,3 +17,17 @@ string User::getPassword() const { return this->password; }
 string User::getName() const { return this->name; }
 string User::getSurname() const { return this->surname; }
 string User::getRole() const { return this->role; }
+
+string * User::get(const string &email) {
+
+
+
+
+
+	string query = "SELECT 'name', 'surname' FROM 'users' WHERE email='" + email + "'";
+
+	auto f = User::getDatabase()->execSqlAsyncFuture(query);
+	auto result = f.get();
+
+	return nullptr;
+}

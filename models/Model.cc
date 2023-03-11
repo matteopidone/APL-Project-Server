@@ -2,11 +2,12 @@
 
 using namespace models;
 
-// Constructor
-Model::Model() {
-	// The name is specified inside config.json
-	this->database = app().getDbClient("Matteo");
+// Setters
+void Model::setDatabase(orm::DbClientPtr & db) {
+	database = db;
 }
 
 // Getters
-orm::DbClientPtr Model::getDatabase() const { return this->database; }
+orm::DbClientPtr Model::getDatabase() {
+	return database;
+}
