@@ -1,0 +1,23 @@
+#include "api_UserController.h"
+
+using namespace api;
+
+void UserController::login(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
+    Json::Value parameters = *(req->getJsonObject());
+	string email = parameters["email"].asString();
+	string password = parameters["password"].asString();
+    Json::Value result;
+
+    bool found = models::User::find(email, password);
+    result['found'] = found;
+    if( found ) {
+        string * user = models::User::get(email);
+        result['name'] = result[0];
+	    result["username"] = result[1];
+        result["email"] = email;
+    }
+	HttpResponsePtr resp = HttpResponse::newHttpJsonResponse(result);
+	resp->setStatusCode(k200OK);
+	resp->addCookie("session", "1234567890");
+	callback(resp);
+}
