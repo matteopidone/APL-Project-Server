@@ -1,7 +1,7 @@
 #include "User.h"
 
 // Constructor
-User::User(std::string email, std::string password, std::string name, std::string surname, std::string role) {
+User::User(string email, string password, string name, string surname, string role) {
 	this->email = email;
 	this->password = password;
 	this->name = name;
@@ -10,8 +10,8 @@ User::User(std::string email, std::string password, std::string name, std::strin
 }
 
 // Getters
-std::string User::getEmail() const { return this->email; }
-std::string User::getPassword() const { return this->password; }
-std::string User::getName() const { return this->name; }
-std::string User::getSurname() const { return this->surname; }
-std::string User::getRole() const { return this->role; }
+string User::getEmail() const { return this->email; }
+string User::getPassword() const { return this->password; }
+string User::getName() const { return this->name; }
+string User::getSurname() const { return this->surname; }
+string User::getRole() const { return this->role; }

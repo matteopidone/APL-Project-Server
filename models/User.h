@@ -1,25 +1,25 @@
 #pragma once
 
-#include <drogon/drogon.h>
+#include <string>
 
-using namespace drogon;
+using namespace std;
 
 class User {
    private:
-	std::string email;
-	std::string password;
-	std::string name;
-	std::string surname;
-	std::string role;
+	string email;
+	string password;
+	string name;
+	string surname;
+	string role;
 
    public:
 	// Constructor
-	User(std::string email, std::string password, std::string name, std::string surname, std::string role);
+	User(string email, string password, string name, string surname, string role);
 
 	// Getters
-	std::string getEmail() const;
-	std::string getPassword() const;
-	std::string getName() const;
-	std::string getSurname() const;
-	std::string getRole() const;
+	string getEmail() const;
+	string getPassword() const;
+	string getName() const;
+	string getSurname() const;
+	string getRole() const;
 };

@@ -1,21 +1,22 @@
 #pragma once
 
-#include <drogon/drogon.h>
+#include <string>
+#include <ctime>
 
-using namespace drogon;
+using namespace std;
 
 class Holiday {
    private:
-	std::string id_user;
-	std::tm date;
-	std::string type;
+	string id_user;
+	tm date;
+	string type;
 
    public:
 	// Constructor
-	Holiday(std::string id_user, std::tm date, std::string type);
+	Holiday(string id_user, tm date, string type);
 
 	// Getters
-	std::string getId_user() const;
-	std::tm getDate() const;
-	std::string getType() const;
+	string getId_user() const;
+	tm getDate() const;
+	string getType() const;
 };
