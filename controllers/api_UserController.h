@@ -1,6 +1,7 @@
 #pragma once
 
 #include <drogon/HttpController.h>
+#include "../models/User.h"
 
 using namespace drogon;
 using namespace std;
