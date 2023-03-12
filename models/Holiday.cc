@@ -4,7 +4,7 @@ using namespace models;
 
 // Constructors
 Holiday::Holiday() {}
-Holiday::Holiday(const string id_user, const tm date, const string type, const string message) {
+Holiday::Holiday(const string id_user, const tm date, const int type, const string message) {
 	this->id_user = id_user;
 	this->date = date;
 	this->type = type;
@@ -14,7 +14,7 @@ Holiday::Holiday(const string id_user, const tm date, const string type, const s
 // Getters
 string Holiday::getId_user() const { return this->id_user; }
 tm Holiday::getDate() const { return this->date; }
-string Holiday::getType() const { return this->type; }
+int Holiday::getType() const { return this->type; }
 string Holiday::getMessage() const { return this->message; }
 
 // Functions
@@ -37,10 +37,10 @@ Holiday * Holiday::getUserHolidays(const string email, int * size) {
 		int i = 0;
 		tm date = {};
 		for (const drogon::orm::Row row : result) {
-			strptime(row[0].as<std::string>().c_str(), "%Y-%m-%d", &date);
+			strptime(row[0].as<string>().c_str(), "%Y-%m-%d", &date);
 			date.tm_year += 1900;
 			date.tm_mon += 1;
-			values[i++] = Holiday(email, date, row[1].as<std::string>(), row[2].as<std::string>());
+			values[i++] = Holiday(email, date, row[1].as<int>(), row[2].as<string>());
 		}
 
 		return values;
@@ -55,8 +55,8 @@ bool Holiday::insertUserHoliday(const string email, const tm date, const string 
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-		string new_date = to_string(date.tm_year + 1900) + "-" + to_string(date.tm_mon) + "-" + to_string(date.tm_mday);
-		string query = "INSERT INTO holidays(id_user, date, type, message) VALUES ('" + email + "','" + new_date + "','0','" + message + "') ON DUPLICATE KEY UPDATE type=0";
+		string new_date = to_string(date.tm_year + 1900) + "-" + to_string(date.tm_mon + 1) + "-" + to_string(date.tm_mday);
+		string query = "INSERT INTO holidays(id_user, date, type, message) VALUES ('" + email + "','" + new_date + "',0,'" + message + "') ON DUPLICATE KEY UPDATE type=0";
 
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();

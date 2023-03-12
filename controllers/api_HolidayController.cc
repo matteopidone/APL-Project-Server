@@ -22,7 +22,7 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 		result[i]["year"] = date.tm_year;
 		result[i]["month"] = date.tm_mon;
 		result[i]["day"] = date.tm_mday;
-		result[i]["type"] = stoi(values[i].getType()); // da vedere -> cambiare a intero
+		result[i]["type"] = values[i].getType();
 		result[i]["message"] = values[i].getMessage();
 	}
 

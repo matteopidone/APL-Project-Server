@@ -11,18 +11,18 @@ namespace models {
 	private:
 		string id_user;
 		tm date;
-		string type;
+		int type;
 		string message;
 
 	public:
 		// Constructor
 		Holiday();
-		Holiday(const string id_user, const tm date, const string type, const string message);
+		Holiday(const string id_user, const tm date, const int type, const string message);
 
 		// Getters
 		string getId_user() const;
 		tm getDate() const;
-		string getType() const;
+		int getType() const;
 		string getMessage() const;
 
 		// Functions
