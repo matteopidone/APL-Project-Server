@@ -26,6 +26,9 @@ Holiday * Holiday::getUserHolidays(const string &email, int * size) {
 	drogon::orm::Result result = future.get();
 
 	*size = result.size();
+	if (!*size) {
+		return nullptr;
+	}
 	Holiday * values = new Holiday[*size];
 
 	int i = 0;
