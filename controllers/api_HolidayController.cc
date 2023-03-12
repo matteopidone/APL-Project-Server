@@ -2,10 +2,7 @@
 
 using namespace api;
 
-void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
-	Json::Value parameters = *(req->getJsonObject());
-	string email = parameters["email"].asString();
-
+void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email) {
 	Json::Value result;
 
 	int size;

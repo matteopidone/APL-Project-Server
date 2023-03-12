@@ -10,9 +10,9 @@ namespace api {
 	class HolidayController : public drogon::HttpController<HolidayController> {
 		public:
 			METHOD_LIST_BEGIN
-			ADD_METHOD_TO(HolidayController::getHolidays, "/api/getHolidays", Post);
+			ADD_METHOD_TO(HolidayController::getHolidays, "/api/getHolidays?email={1}", Get);
 			METHOD_LIST_END
 
-		void getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
+		void getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email);
 	};
 }
