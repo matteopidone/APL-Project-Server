@@ -17,7 +17,7 @@ namespace models {
 	public:
 		// Constructor
 		Holiday();
-		Holiday(string id_user, tm date, string type, string message);
+		Holiday(const string id_user, const tm date, const string type, const string message);
 
 		// Getters
 		string getId_user() const;
@@ -26,6 +26,7 @@ namespace models {
 		string getMessage() const;
 
 		// Functions
-		static Holiday * getUserHolidays(const string &email, int * size);
+		static Holiday * getUserHolidays(const string email, int * size);
+		static bool insertUserHoliday(const string email, const tm date, const string message = "");
 	};
 }

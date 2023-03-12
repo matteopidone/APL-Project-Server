@@ -4,7 +4,7 @@ using namespace models;
 
 // Constructors
 Holiday::Holiday() {}
-Holiday::Holiday(string id_user, tm date, string type, string message) {
+Holiday::Holiday(const string id_user, const tm date, const string type, const string message) {
 	this->id_user = id_user;
 	this->date = date;
 	this->type = type;
@@ -18,27 +18,53 @@ string Holiday::getType() const { return this->type; }
 string Holiday::getMessage() const { return this->message; }
 
 // Functions
-Holiday * Holiday::getUserHolidays(const string &email, int * size) {
-	drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-	string query = "SELECT date, type, message FROM holidays WHERE id_user='" + email + "'";
-	future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
-	drogon::orm::Result result = future.get();
+Holiday * Holiday::getUserHolidays(const string email, int * size) {
+	try {
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-	*size = result.size();
-	if (!*size) {
+		string query = "SELECT date, type, message FROM holidays WHERE id_user='" + email + "'";
+
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
+
+		*size = result.size();
+		if (!*size) {
+			return nullptr;
+		}
+		Holiday * values = new Holiday[*size];
+
+		int i = 0;
+		tm date = {};
+		for (const drogon::orm::Row row : result) {
+			strptime(row[0].as<std::string>().c_str(), "%Y-%m-%d", &date);
+			date.tm_year += 1900;
+			date.tm_mon += 1;
+			values[i++] = Holiday(email, date, row[1].as<std::string>(), row[2].as<std::string>());
+		}
+
+		return values;
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
 		return nullptr;
 	}
-	Holiday * values = new Holiday[*size];
+}
 
-	int i = 0;
-	tm date = {};
-	for (const drogon::orm::Row row : result) {
-		strptime(row[0].as<std::string>().c_str(), "%Y-%m-%d", &date);
-		date.tm_year += 1900;
-		date.tm_mon += 1;
-		values[i++] = Holiday(email, date, row[1].as<std::string>(), row[2].as<std::string>());
+bool Holiday::insertUserHoliday(const string email, const tm date, const string message) {
+	try {
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+
+		string new_date = to_string(date.tm_year + 1900) + "-" + to_string(date.tm_mon) + "-" + to_string(date.tm_mday);
+		string query = "INSERT INTO holidays(id_user, date, type, message) VALUES ('" + email + "','" + new_date + "','0','" + message + "') ON DUPLICATE KEY UPDATE type=0";
+
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
+
+		return true;
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
+		return false;
 	}
-
-	return values;
 }
