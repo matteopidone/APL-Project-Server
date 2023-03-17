@@ -2,9 +2,11 @@
 
 #include <drogon/HttpController.h>
 #include "../models/Holiday.h"
+#include "../plugins/jwt.h"
 
 using namespace drogon;
 using namespace std;
+using namespace aplutils;
 
 namespace api {
 	class HolidayController : public drogon::HttpController<HolidayController> {

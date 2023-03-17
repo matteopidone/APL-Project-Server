@@ -4,31 +4,32 @@ using namespace api;
 
 void UserController::login(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
     try {
-        JWT jwtobj("HS256");
         Json::Value parameters = *(req->getJsonObject());
         string email = parameters["email"].asString();
         string password = parameters["password"].asString();
         Json::Value result;
-        string payload = "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}";
+
+        //Json Web Token
+        JWT jwtobj("HS256");
         string secret = "mysecret";
-        string encoded_payload = jwtobj.encode(payload);
 
-        string jwt = jwtobj.generate_jwt(encoded_payload, "mysecret");
-
-        std::cout << "Token JWT: " << jwt << std::endl;
-
-
-        std::cout << "Token: " <<         jwtobj.verify_jwt(jwt, "mysecret") << std::endl;
-        std::cout << "Token: " <<         jwtobj.verify_jwt("pippo", "mysecret") << std::endl;
+        //StreamWriterBuilder per convertire da json a stringa
+        Json::StreamWriterBuilder builder;
 
         bool found = models::User::find(email, password);
         result["found"] = found;
         if( found ) {
             string * user = models::User::get(email);
-            result["found"] = "true";
+            result["found"] = true;
             result["name"] = user[0];
             result["surname"] = user[1];
             result["email"] = email;
+
+            //Genero un JWT
+            string payload = Json::writeString(builder, parameters);
+            string encoded_payload = jwtobj.encode(payload);
+            string jwt = jwtobj.generate_jwt(encoded_payload, secret);
+            result["token"] = jwt;
         }
         HttpResponsePtr resp = HttpResponse::newHttpJsonResponse(result);
         resp->setStatusCode(k200OK);

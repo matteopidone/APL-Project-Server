@@ -4,6 +4,30 @@ using namespace api;
 
 void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email) {
 	Json::Value result;
+	JWT jwtobj("HS256");
+	const string secret = "mysecret";
+	
+	string token = req->getHeader("Authorization");
+    if (token.empty()) {
+		// Se non è vlaorizzato restituisco una risposta di errore.
+		HttpResponsePtr resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
+		callback(resp);
+		return;
+    }
+
+	const string bearerPrefix = "Bearer ";
+	if (token.find(bearerPrefix) == 0) {
+		token = token.substr(bearerPrefix.length());
+	}
+
+	if( !jwtobj.verify_jwt(token, secret) ){
+		// Se non è valido restituisco una risposta di errore.
+		HttpResponsePtr resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
+		callback(resp);
+		return;
+	}	
 
 	int size;
 	models::Holiday * values = models::Holiday::getUserHolidays(email, &size);
@@ -33,6 +57,32 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 }
 
 void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
+	// Verifica del token di autenticazione.
+	JWT jwtobj("HS256");
+	const string secret = "mysecret";
+	
+	string token = req->getHeader("Authorization");
+    if (token.empty()) {
+		// Se non è valorizzato restituisco una risposta di errore.
+		HttpResponsePtr resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
+		callback(resp);
+		return;
+    }
+
+	const string bearerPrefix = "Bearer ";
+	if (token.find(bearerPrefix) == 0) {
+		token = token.substr(bearerPrefix.length());
+	}
+
+	if( !jwtobj.verify_jwt(token, secret) ){
+		// Se non è valido restituisco una risposta di errore.
+		HttpResponsePtr resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
+		callback(resp);
+		return;
+	}
+
 	Json::Value parameters = *(req->getJsonObject());
 	string email = parameters["email"].asString();
 	int year = parameters["year"].asInt();

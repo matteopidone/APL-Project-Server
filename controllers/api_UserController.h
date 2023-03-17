@@ -2,7 +2,7 @@
 
 #include <drogon/HttpController.h>
 #include "../models/User.h"
-#include "../utils/jwt.cc"
+#include "../plugins/jwt.h"
 #include <iostream>
 #include <openssl/evp.h>
 #include <openssl/bio.h>
@@ -12,6 +12,7 @@
 
 using namespace drogon;
 using namespace std;
+using namespace aplutils;
 
 namespace api
 {
