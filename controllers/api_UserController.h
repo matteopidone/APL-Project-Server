@@ -2,6 +2,13 @@
 
 #include <drogon/HttpController.h>
 #include "../models/User.h"
+#include "../utils/jwt.cc"
+#include <iostream>
+#include <openssl/evp.h>
+#include <openssl/bio.h>
+#include <openssl/buffer.h>
+#include <openssl/hmac.h>
+#include <openssl/rand.h>
 
 using namespace drogon;
 using namespace std;
