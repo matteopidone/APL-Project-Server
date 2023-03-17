@@ -3,7 +3,7 @@
 
 using namespace aplutils;
 
-string JWT::base64_encode(const std::string &in) {
+string JWT::encode(const std::string &in) {
     BIO *bio, *b64;
     BUF_MEM *bufferPtr;
 
@@ -22,7 +22,7 @@ string JWT::base64_encode(const std::string &in) {
 }
 
 //Funzione per la decodifica Base64
-string JWT::base64_decode(const std::string &in) {
+string JWT::decode(const std::string &in) {
     BIO *bio, *b64;
     char *buffer = (char *)calloc(in.length(), sizeof(char));
 
@@ -40,15 +40,13 @@ string JWT::base64_decode(const std::string &in) {
 }
 
 //Funzione per generare il JWT
-string JWT::generate_jwt(const std::string &header, const std::string &payload, const std::string &secret) {
-    std::string encoded_header = base64_encode(header);
-    std::string encoded_payload = base64_encode(payload);
-
-    std::string data = encoded_header + "." + encoded_payload;
+string JWT::generate_jwt(const std::string &payload, const std::string &secret) {
+    std::string encoded_header = this->encode("{\"alg\":\"HS256\",\"typ\":\"" + this->algoritm + "\"}");
+    std::string data = encoded_header + "." + payload;
 
     unsigned char* hmac = HMAC(EVP_sha256(), secret.c_str(), secret.size(), (const unsigned char*)data.c_str(), data.size(), NULL, NULL);
     std::string signature((char*)hmac, 32);
-    std::string encoded_signature = base64_encode(signature);
+    std::string encoded_signature = this->encode(signature);
 
     std::string jwt = data + "." + encoded_signature;
 
@@ -71,7 +69,7 @@ bool JWT::verify_jwt(const std::string &jwt, const std::string &secret) {
 
     unsigned char* hmac = HMAC(EVP_sha256(), secret.c_str(), secret.size(), (const unsigned char*)data.c_str(), data.size(), NULL, NULL);
     std::string signature((char*)hmac, 32);
-    std::string expected_signature = base64_encode(signature);
+    std::string expected_signature = this->encode(signature);
 
     return expected_signature == encoded_signature;
 }
