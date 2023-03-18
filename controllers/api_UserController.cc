@@ -3,30 +3,42 @@
 using namespace api;
 
 void UserController::login(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
+    HttpResponsePtr resp;
     try {
+        // Prendo i parametri della richiesta.
         Json::Value parameters = *(req->getJsonObject());
         string email = parameters["email"].asString();
-        string password = parameters["password"].asString();
-        Json::Value result;
+        if( !validate_email(email) ){
+            resp = HttpResponse::newHttpResponse();
+            resp->setStatusCode(k400BadRequest);
 
-        bool found = models::User::find(email, password);
-        result["found"] = found;
-        if( found ) {
-            string * user = models::User::get(email);
-            result["name"] = user[0];
-            result["surname"] = user[1];
-            result["email"] = email;
+        } else {
 
-            //Genero un JWT
-            string jwt = generate_token(parameters, JWT_SECRET);
-            result["token"] = jwt;
+            string password = parameters["password"].asString();
+            Json::Value result;
+
+            bool found = models::User::find(email, password);
+            result["found"] = found;
+            if( found ) {
+                string * user = models::User::get(email);
+                result["name"] = user[0];
+                result["surname"] = user[1];
+                result["email"] = email;
+
+                //Genero un JWT
+                string jwt = generate_token(parameters, JWT_SECRET);
+                result["token"] = jwt;
+                delete[] user;
+            }
+            resp = HttpResponse::newHttpJsonResponse(result);
+            resp->setStatusCode(k200OK);
         }
-        HttpResponsePtr resp = HttpResponse::newHttpJsonResponse(result);
-        resp->setStatusCode(k200OK);
-        callback(resp);
-        //Delete
-        return;
-    } catch (string exception) {
-        std::cout << "Errore: " << exception << std::endl;
+
+    } catch (const exception &exception) {
+        resp = HttpResponse::newHttpResponse();
+        resp->setStatusCode(k500InternalServerError);
     }
+    
+    callback(resp);
+    return;
 }
