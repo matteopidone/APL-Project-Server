@@ -9,9 +9,11 @@ namespace aplutils
 {
 class Auth
 {
+  private:
+    JWT jwtobj = JWT("HS256");
 
   protected:
-	bool validate_token(string &auth_header, const string &secret);
+    bool validate_token(string &auth_header, const string &secret);
     string generate_token(const Json::Value &json, const string &secret );
 };
 }

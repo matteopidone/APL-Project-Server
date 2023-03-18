@@ -3,7 +3,6 @@
 using namespace aplutils;
 
 bool Auth::validate_token(string &auth_header, const string &secret) {
-	JWT jwtobj("HS256");
 
     if (auth_header.empty()) {
 		return false;
@@ -22,9 +21,6 @@ bool Auth::validate_token(string &auth_header, const string &secret) {
 }
 
 string Auth::generate_token(const Json::Value &json, const string &secret ){
-    //Json Web Token
-    JWT jwtobj("HS256");
-
     //StreamWriterBuilder per convertire da json a stringa
     Json::StreamWriterBuilder builder;
     
