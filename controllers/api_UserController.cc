@@ -9,6 +9,7 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
         Json::Value parameters = *(req->getJsonObject());
         string email = parameters["email"].asString();
         if( !validate_email(email) ){
+            //Se la mail non è valida rispondo con status code 400.
             resp = HttpResponse::newHttpResponse();
             resp->setStatusCode(k400BadRequest);
 
@@ -25,9 +26,11 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
                 result["surname"] = user[1];
                 result["email"] = email;
 
-                //Genero un JWT
+                // Genero un JWT.
                 string jwt = generate_token(parameters, JWT_SECRET);
                 result["token"] = jwt;
+
+                // Elimino la memoria allocata.
                 delete[] user;
             }
             resp = HttpResponse::newHttpJsonResponse(result);
@@ -35,6 +38,7 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
         }
 
     } catch (const exception &exception) {
+        //Rispondo con status code 500.
         resp = HttpResponse::newHttpResponse();
         resp->setStatusCode(k500InternalServerError);
     }
