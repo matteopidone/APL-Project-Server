@@ -3,7 +3,6 @@
 #include <drogon/HttpController.h>
 #include "../models/User.h"
 #include "../plugins/auth.h"
-#include <iostream>
 
 using namespace drogon;
 using namespace std;

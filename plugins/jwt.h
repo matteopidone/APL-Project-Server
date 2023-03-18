@@ -1,4 +1,3 @@
-#include <iostream>
 #include <openssl/evp.h>
 #include <openssl/bio.h>
 #include <openssl/buffer.h>

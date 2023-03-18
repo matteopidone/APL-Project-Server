@@ -1,4 +1,3 @@
-//#include <iostream>
 #include <json/json.h>
 #include <string>
 #include "jwt.h"
