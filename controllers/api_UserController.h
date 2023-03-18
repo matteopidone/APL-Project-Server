@@ -2,13 +2,8 @@
 
 #include <drogon/HttpController.h>
 #include "../models/User.h"
-#include "../plugins/jwt.h"
+#include "../plugins/auth.h"
 #include <iostream>
-#include <openssl/evp.h>
-#include <openssl/bio.h>
-#include <openssl/buffer.h>
-#include <openssl/hmac.h>
-#include <openssl/rand.h>
 
 using namespace drogon;
 using namespace std;
@@ -16,7 +11,7 @@ using namespace aplutils;
 
 namespace api
 {
-class UserController : public drogon::HttpController<UserController>
+class UserController : public drogon::HttpController<UserController>, public Auth
 {
   public:
     METHOD_LIST_BEGIN

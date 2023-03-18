@@ -8,13 +8,7 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
         string email = parameters["email"].asString();
         string password = parameters["password"].asString();
         Json::Value result;
-
-        //Json Web Token
-        JWT jwtobj("HS256");
-        string secret = "mysecret";
-
-        //StreamWriterBuilder per convertire da json a stringa
-        Json::StreamWriterBuilder builder;
+        const string secret = "mysecret";
 
         bool found = models::User::find(email, password);
         result["found"] = found;
@@ -26,9 +20,7 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
             result["email"] = email;
 
             //Genero un JWT
-            string payload = Json::writeString(builder, parameters);
-            string encoded_payload = jwtobj.encode(payload);
-            string jwt = jwtobj.generate_jwt(encoded_payload, secret);
+            string jwt = generate_token(parameters, secret);
             result["token"] = jwt;
         }
         HttpResponsePtr resp = HttpResponse::newHttpJsonResponse(result);
