@@ -4,12 +4,11 @@ using namespace api;
 
 void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email) {
 	Json::Value result;
-	const string secret = "mysecret";
 	
 	string auth_field = req->getHeader("Authorization");
 
 	// Metodo ereditato da Auth.
-    if (!validate_token(auth_field, secret)) {
+    if (!validate_token(auth_field, JWT_SECRET)) {
 		// Se non è valido restituisco una risposta di errore.
 		HttpResponsePtr resp = HttpResponse::newHttpResponse();
 		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
@@ -45,12 +44,10 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 }
 
 void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
-	// Verifica del token di autenticazione.
-	const string secret = "mysecret";
 	
 	string auth_field = req->getHeader("Authorization");
 
-    if (!validate_token(auth_field, secret)) {
+    if (!validate_token(auth_field, JWT_SECRET)) {
 		// Se non è valido restituisco una risposta di errore.
 		HttpResponsePtr resp = HttpResponse::newHttpResponse();
 		resp->setStatusCode(HttpStatusCode::k401Unauthorized);

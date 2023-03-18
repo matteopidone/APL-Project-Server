@@ -1,6 +1,7 @@
 #include <json/json.h>
 #include <string>
 #include "jwt.h"
+#include "constants.h"
 
 using namespace std;
 
