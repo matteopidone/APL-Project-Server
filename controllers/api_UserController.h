@@ -2,13 +2,15 @@
 
 #include <drogon/HttpController.h>
 #include "../models/User.h"
+#include "../plugins/auth.h"
 
 using namespace drogon;
 using namespace std;
+using namespace aplutils;
 
 namespace api
 {
-class UserController : public drogon::HttpController<UserController>
+class UserController : public drogon::HttpController<UserController>, public Auth
 {
   public:
     METHOD_LIST_BEGIN

@@ -4,6 +4,18 @@ using namespace api;
 
 void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email) {
 	Json::Value result;
+	const string secret = "mysecret";
+	
+	string auth_field = req->getHeader("Authorization");
+
+	// Metodo ereditato da Auth.
+    if (!validate_token(auth_field, secret)) {
+		// Se non è valido restituisco una risposta di errore.
+		HttpResponsePtr resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
+		callback(resp);
+		return;
+    }	
 
 	int size;
 	models::Holiday * values = models::Holiday::getUserHolidays(email, &size);
@@ -33,6 +45,19 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 }
 
 void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
+	// Verifica del token di autenticazione.
+	const string secret = "mysecret";
+	
+	string auth_field = req->getHeader("Authorization");
+
+    if (!validate_token(auth_field, secret)) {
+		// Se non è valido restituisco una risposta di errore.
+		HttpResponsePtr resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
+		callback(resp);
+		return;
+    }
+
 	Json::Value parameters = *(req->getJsonObject());
 	string email = parameters["email"].asString();
 	int year = parameters["year"].asInt();
