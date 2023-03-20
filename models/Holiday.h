@@ -26,7 +26,8 @@ namespace models {
 		string getMessage() const;
 
 		// Functions
-		static Holiday * getUserHolidays(const string email, int * size);
+		static Holiday * getAllUserHolidays(const string email, int * size);
 		static bool insertUserHoliday(const string email, const tm date, const string message = "");
+		static bool isHoliday(const string &email, const tm &date);
 	};
 }

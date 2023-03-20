@@ -19,7 +19,7 @@ string Holiday::getMessage() const { return this->message; }
 
 // Functions
 
-Holiday * Holiday::getUserHolidays(const string email, int * size) {
+Holiday * Holiday::getAllUserHolidays(const string email, int * size) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -62,6 +62,29 @@ bool Holiday::insertUserHoliday(const string email, const tm date, const string 
 		drogon::orm::Result result = future.get();
 
 		return true;
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
+		return false;
+	}
+}
+
+bool Holiday::isHoliday(const string &email, const tm &date){
+	try {
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+
+		string str_date = to_string(date.tm_year + 1900) + "-" + to_string(date.tm_mon + 1) + "-" + to_string(date.tm_mday);
+		string query = "SELECT * FROM holidays WHERE id_user='" + email + "' AND date ='" + str_date + "'";
+
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
+
+		int size = result.size();
+		if (!size) {
+			return false;
+		} else {
+			return true;
+		}
 
 	} catch (const exception &e) {
 		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;

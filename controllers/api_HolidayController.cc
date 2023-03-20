@@ -27,7 +27,7 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 	}
 
 	int size;
-	models::Holiday * values = models::Holiday::getUserHolidays(email, &size);
+	models::Holiday * values = models::Holiday::getAllUserHolidays(email, &size);
 
 	if (!size) {
 		resp = HttpResponse::newHttpJsonResponse(result);
@@ -53,12 +53,12 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 }
 
 void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
-	
+	HttpResponsePtr resp;
 	string auth_field = req->getHeader("Authorization");
 
     if (!validate_token(auth_field, JWT_SECRET)) {
 		// Se non è valido restituisco una risposta di errore.
-		HttpResponsePtr resp = HttpResponse::newHttpResponse();
+		resp = HttpResponse::newHttpResponse();
 		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
 		callback(resp);
 		return;
@@ -71,9 +71,25 @@ void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<v
 	int day = parameters["day"].asInt();
 	string message = parameters["message"].asString();
 
+	if( !validate_email(email) ){
+		//Se la mail non è valida rispondo con status code 400.
+		resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(k400BadRequest);
+		callback(resp);
+		return;
+	}
+
 	tm date = {};
 	string string_date = to_string(year) + "-" + to_string(month) + "-" + to_string(day);
 	strptime(string_date.c_str(), "%Y-%m-%d", &date);
+
+	if(models::Holiday::isHoliday(email, date)){
+		//Se è stata già inoltrata una richiesta per questa data, ritorno risposta con codice 400.
+		resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(k400BadRequest);
+		callback(resp);
+		return;
+	}
 
 	bool res = models::Holiday::insertUserHoliday(email, date, message);
 
@@ -82,13 +98,13 @@ void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<v
 
 	if (!res) {
 		result["response"] = "Non è possibile creare la richiesta di ferie";
-		HttpResponsePtr resp = HttpResponse::newHttpJsonResponse(result);
+		resp = HttpResponse::newHttpJsonResponse(result);
 		resp->setStatusCode(k500InternalServerError);
 		callback(resp);
 		return;
 	}
 
-	HttpResponsePtr resp = HttpResponse::newHttpJsonResponse(result);
+	resp = HttpResponse::newHttpJsonResponse(result);
 	resp->setStatusCode(k200OK);
 	callback(resp);
 }
