@@ -3,25 +3,35 @@
 using namespace api;
 
 void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email) {
+	//Ma sta nello stack?
 	Json::Value result;
+	HttpResponsePtr resp;
 	
 	string auth_field = req->getHeader("Authorization");
 
 	// Metodo ereditato da Auth.
-    if (!validate_token(auth_field, JWT_SECRET)) {
+    if ( !validate_token(auth_field, JWT_SECRET) ) {
 		// Se non è valido restituisco una risposta di errore.
-		HttpResponsePtr resp = HttpResponse::newHttpResponse();
+		resp = HttpResponse::newHttpResponse();
 		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
 		callback(resp);
 		return;
-    }	
+    }
+	
+	if( !validate_email(email) ){
+		//Se la mail non è valida rispondo con status code 400.
+		resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(k400BadRequest);
+		callback(resp);
+		return;
+	}
 
 	int size;
 	models::Holiday * values = models::Holiday::getUserHolidays(email, &size);
 
 	if (!size) {
 		result["response"] = "Nessuna ferie presente";
-		HttpResponsePtr resp = HttpResponse::newHttpJsonResponse(result);
+		resp = HttpResponse::newHttpJsonResponse(result);
 		resp->setStatusCode(k200OK);
 		callback(resp);
 		return;
@@ -37,10 +47,10 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 		result[i]["message"] = values[i].getMessage();
 	}
 
-	HttpResponsePtr resp = HttpResponse::newHttpJsonResponse(result);
+	delete[] values;
+	resp = HttpResponse::newHttpJsonResponse(result);
 	resp->setStatusCode(k200OK);
 	callback(resp);
-	delete[] values;
 }
 
 void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
