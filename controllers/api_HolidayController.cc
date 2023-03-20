@@ -30,7 +30,6 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 	models::Holiday * values = models::Holiday::getUserHolidays(email, &size);
 
 	if (!size) {
-		result["response"] = "Nessuna ferie presente";
 		resp = HttpResponse::newHttpJsonResponse(result);
 		resp->setStatusCode(k200OK);
 		callback(resp);
