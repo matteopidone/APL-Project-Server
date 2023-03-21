@@ -12,11 +12,11 @@ namespace models {
 			string password;
 			string name;
 			string surname;
-			string role;
+			int role;
 
 		public:
 			// Constructor
-			User(string email, string password, string name, string surname, string role);
+			User(string email, string password, string name, string surname, int role);
 
 			// Getters
 			string getEmail() const;
@@ -26,7 +26,7 @@ namespace models {
 			string getRole() const;
 
 			// Functions
-			static void create(string email, string password, string name, string surname, string role);
+			static void create(string email, string password, string name, string surname, int role);
 			static bool find(const string &email, const string &password);
 			static string * get(const string &email);
 	};
