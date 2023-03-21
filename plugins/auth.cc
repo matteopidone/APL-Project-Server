@@ -50,3 +50,8 @@ bool Auth::is_valid_day(tm time){
         return false;
     }
 }
+
+void Auth::parse_tm(const int &day, const int &month, const int &year, tm &time){
+    string string_date = to_string(year) + "-" + to_string(month) + "-" + to_string(day);
+	strptime(string_date.c_str(), "%Y-%m-%d", &time);
+}

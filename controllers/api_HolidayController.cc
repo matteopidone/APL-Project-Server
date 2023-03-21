@@ -80,8 +80,8 @@ void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<v
 	}
 
 	tm date = {};
-	string string_date = to_string(year) + "-" + to_string(month) + "-" + to_string(day);
-	strptime(string_date.c_str(), "%Y-%m-%d", &date);
+	// Metodo implementato per tornare la data in formato struct tm.
+	parse_tm(day, month, year, date);
 
 	if( models::Holiday::isHoliday(email, date) || !is_valid_day(date) ){
 		//Se è stata già inoltrata una richiesta per questa data, ritorno risposta con codice 400.

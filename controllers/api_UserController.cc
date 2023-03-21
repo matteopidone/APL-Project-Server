@@ -46,3 +46,61 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
     callback(resp);
     return;
 }
+
+void UserController::updateHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
+    HttpResponsePtr resp;
+    string auth_field = req->getHeader("Authorization");
+
+    if (!validate_token(auth_field, JWT_SECRET)) {
+		// Se non è valido restituisco una risposta di errore.
+		resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
+		callback(resp);
+		return;
+    }
+
+    // Prendo i parametri della richiesta.
+    Json::Value parameters = *(req->getJsonObject());
+    string email = parameters["email"].asString();
+    int year = parameters["year"].asInt();
+    int month = parameters["month"].asInt();
+    int day = parameters["day"].asInt();
+    int type = parameters["type"].asInt();
+    
+    if( !validate_email(email) ){
+        //Se la mail non è valida rispondo con status code 400.
+        resp = HttpResponse::newHttpResponse();
+        resp->setStatusCode(k400BadRequest);     
+        callback(resp);
+        return;
+
+    }
+    tm date = {};
+    // Metodo implementato per tornare la data in formato struct tm.
+    parse_tm(day, month, year, date);
+
+    Json::Value result;
+
+    try {
+
+        if( models::Holiday::isHoliday(email, date) && models::Holiday::isValidTypeHoliday(type) ){
+            bool updated = models::Holiday::updateUserHoliday(email, date, type);
+            result["updated"] = updated;
+            resp = HttpResponse::newHttpJsonResponse(result);
+            resp->setStatusCode(k200OK);
+            callback(resp);
+            return;
+        }
+    } catch (const exception &exception) {
+        //Rispondo con status code 500.
+        resp = HttpResponse::newHttpResponse();
+        resp->setStatusCode(k500InternalServerError);
+        callback(resp);
+        return;
+    }
+    //Se la richiesta non è consistente rispondo con status code 500.
+    resp = HttpResponse::newHttpResponse();
+    resp->setStatusCode(k400BadRequest);
+    callback(resp);
+    return;
+}
