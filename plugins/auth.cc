@@ -35,3 +35,18 @@ bool Auth::validate_email( const string &email ){
     const regex email_regex(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
     return regex_match(email, email_regex);
 }
+//Funzione che dato un tempo, ritorna un booleano che indica se la data è valida per una richiesta, in particolare
+//è valida se: è successiva alla data di oggi e non è sabato e domenica.
+bool Auth::is_valid_day(tm time){
+    time_t now = std::time(nullptr);
+    tm* now_tm = localtime(&now);
+    
+    char weekday[3];
+    strftime(weekday, 3, "%w", &time);
+    
+    if (difftime(mktime(&time), mktime(now_tm) && weekday[0] != '0' && weekday[0] != '6') > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}

@@ -83,7 +83,7 @@ void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<v
 	string string_date = to_string(year) + "-" + to_string(month) + "-" + to_string(day);
 	strptime(string_date.c_str(), "%Y-%m-%d", &date);
 
-	if(models::Holiday::isHoliday(email, date)){
+	if( models::Holiday::isHoliday(email, date) || !is_valid_day(date) ){
 		//Se è stata già inoltrata una richiesta per questa data, ritorno risposta con codice 400.
 		resp = HttpResponse::newHttpResponse();
 		resp->setStatusCode(k400BadRequest);
