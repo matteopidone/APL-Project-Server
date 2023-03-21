@@ -16,11 +16,11 @@ class UserController : public drogon::HttpController<UserController>, public Aut
   public:
     METHOD_LIST_BEGIN
     ADD_METHOD_TO(UserController::login, "/api/login", Post);
-    ADD_METHOD_TO(UserController::updateHoliday, "/api/updateHoliday", Post);
+    ADD_METHOD_TO(UserController::updateRequest, "/api/updateRequest", Post);
     METHOD_LIST_END
 
     void login(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
-    void updateHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
+    void updateRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
 
 };
 }

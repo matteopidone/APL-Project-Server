@@ -47,7 +47,7 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
     return;
 }
 
-void UserController::updateHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
+void UserController::updateRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
     HttpResponsePtr resp;
     string auth_field = req->getHeader("Authorization");
 
@@ -83,7 +83,7 @@ void UserController::updateHoliday(const HttpRequestPtr &req, std::function<void
 
     try {
 
-        if( models::Holiday::isHoliday(email, date) && models::Holiday::isValidTypeHoliday(type) ){
+        if( models::Holiday::isAlreadyRequested(email, date) && models::Holiday::isValidTypeHoliday(type) ){
             bool updated = models::Holiday::updateUserHoliday(email, date, type);
             result["updated"] = updated;
             resp = HttpResponse::newHttpJsonResponse(result);

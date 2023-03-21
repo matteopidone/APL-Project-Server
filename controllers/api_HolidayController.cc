@@ -83,7 +83,7 @@ void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<v
 	// Metodo implementato per tornare la data in formato struct tm.
 	parse_tm(day, month, year, date);
 
-	if( models::Holiday::isHoliday(email, date) || !is_valid_day(date) ){
+	if( models::Holiday::isAlreadyRequested(email, date) || !is_valid_day(date) ){
 		//Se è stata già inoltrata una richiesta per questa data, ritorno risposta con codice 400.
 		resp = HttpResponse::newHttpResponse();
 		resp->setStatusCode(k400BadRequest);

@@ -75,7 +75,7 @@ bool Holiday::insertUserHoliday(const string email, const tm date, const string 
 	}
 }
 
-bool Holiday::isHoliday(const string &email, const tm &date){
+bool Holiday::isAlreadyRequested(const string &email, const tm &date){
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 

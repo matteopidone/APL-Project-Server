@@ -33,7 +33,7 @@ namespace models {
 		// Functions
 		static Holiday * getAllUserHolidays(const string email, int * size);
 		static bool insertUserHoliday(const string email, const tm date, const string message = "");
-		static bool isHoliday(const string &email, const tm &date);
+		static bool isAlreadyRequested(const string &email, const tm &date);
 		static bool updateUserHoliday(const string &email, const tm &date, const int &type);
 		static bool isValidTypeHoliday(const int &value);
 	};
