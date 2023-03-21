@@ -44,7 +44,7 @@ bool Auth::is_valid_day(tm time){
     char weekday[3];
     strftime(weekday, 3, "%w", &time);
     
-    if (difftime(mktime(&time), mktime(now_tm) && weekday[0] != '0' && weekday[0] != '6') > 0) {
+    if (difftime(mktime(&time), mktime(now_tm)) > 0 && weekday[0] != '0' && weekday[0] != '6') {
         return true;
     } else {
         return false;
