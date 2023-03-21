@@ -52,7 +52,7 @@ void UserController::updateHoliday(const HttpRequestPtr &req, std::function<void
     string auth_field = req->getHeader("Authorization");
 
     if (!validate_token(auth_field, JWT_SECRET)) {
-		// Se non è valido restituisco una risposta di errore.
+		// Se non è valido rispondo con codice 401.
 		resp = HttpResponse::newHttpResponse();
 		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
 		callback(resp);
@@ -98,7 +98,8 @@ void UserController::updateHoliday(const HttpRequestPtr &req, std::function<void
         callback(resp);
         return;
     }
-    //Se la richiesta non è consistente rispondo con status code 500.
+
+    //Se la richiesta non è consistente rispondo con status code 400.
     resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(k400BadRequest);
     callback(resp);
