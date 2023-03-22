@@ -64,7 +64,7 @@ bool User::isAdministrator(const string &email) {
 	int adminType = AllowedRole::Amdministrator;
 	drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-	string query = "SELECT * FROM users WHERE email='" + email + "' and role =" + adminType;
+	string query = "SELECT * FROM users WHERE email='" + email + "' and role =" + to_string(adminType);
 	future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 	drogon::orm::Result result = future.get();
 
