@@ -13,6 +13,10 @@ namespace models {
 			string name;
 			string surname;
 			int role;
+			enum AllowedRole {
+  				User = 0,
+  				Amdministrator = 1,
+			};
 
 		public:
 			// Constructor
@@ -28,6 +32,7 @@ namespace models {
 			// Functions
 			static void create(string email, string password, string name, string surname, int role);
 			static bool find(const string &email, const string &password);
+			static bool isAdministrator(const string &email);
 			static string * get(const string &email);
 	};
 }
