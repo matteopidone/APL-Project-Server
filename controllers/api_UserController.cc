@@ -22,7 +22,7 @@ void UserController::insertUser(const HttpRequestPtr &req, std::function<void(co
     string surname = parameters["surname"].asString();
     string role = parameters["role"].asString();
     
-    if( !validate_email(email) /*|| !getUser*/){
+    if( !validate_email(email) ){
         //Se la mail non è valida rispondo con status code 400.
         resp = HttpResponse::newHttpResponse();
         resp->setStatusCode(k400BadRequest);     
