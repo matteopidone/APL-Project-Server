@@ -38,17 +38,19 @@ bool Auth::validate_email( const string &email ){
 //Funzione che dato un tempo, ritorna un booleano che indica se la data è valida per una richiesta, in particolare
 //è valida se: è successiva alla data di oggi e non è sabato e domenica.
 bool Auth::is_valid_day(tm time){
+
     time_t now = std::time(nullptr);
-    tm* now_tm = localtime(&now);
-    
-    char weekday[3];
-    strftime(weekday, 3, "%w", &time);
-    
-    if (difftime(mktime(&time), mktime(now_tm)) > 0 && weekday[0] != '0' && weekday[0] != '6') {
-        return true;
-    } else {
+    time_t t = std::mktime(&time);
+  
+    if ( t <= now ) {
         return false;
     }
+    // Verifico se è sabato o domenica.
+    if ( time.tm_wday == 0 || time.tm_wday == 6 ) {
+        return false;
+    }
+    
+    return true;
 }
 
 void Auth::parse_tm(const int &day, const int &month, const int &year, tm &time){
