@@ -3,7 +3,6 @@
 using namespace api;
 
 void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email) {
-	//Ma sta nello stack?
 	Json::Value result;
 	HttpResponsePtr resp;
 	
