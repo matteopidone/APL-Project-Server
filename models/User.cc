@@ -3,6 +3,7 @@
 using namespace models;
 
 // Constructor
+User::User() {}
 User::User(string email, string password, string name, string surname, string role) {
 	this->email = email;
 	this->password = password;
@@ -20,11 +21,11 @@ string User::getRole() const { return this->role; }
 
 // Functions
 
-void User::create(const string &email, const string &password, const string &name, const string &surname, const int &role) {
+bool User::create(const string &email, const string &password, const string &name, const string &surname, const string &role) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-		string query = "INSERT INTO users (email, password, name, surname, role) VALUES ('" + email + "', '" + password + "', '" + name + "', '" + surname + "', " + role + ")";
+		string query = "INSERT INTO users (email, password, name, surname, role) VALUES ('" + email + "', '" + password + "', '" + name + "', '" + surname + "', '" + role + "')";
 
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
@@ -69,4 +70,33 @@ bool User::isAdministrator(const string &email) {
 	drogon::orm::Result result = future.get();
 
 	return (bool)result.size();
+}
+
+User * User::getAllUsers(int &size) {
+	try {
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+
+		string query = "SELECT email, password, name, surname, role FROM users WHERE role='" + to_string(AllowedRole::Dependent) + "'";
+
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
+
+		size = result.size();
+		if (!size) {
+			return nullptr;
+		}
+		User * values = new User[size];
+
+		int i = 0;
+		tm date = {};
+		for (const drogon::orm::Row row : result) {
+			values[i++] = User(row[0].as<string>(), row[1].as<string>(), row[2].as<string>(), row[3].as<string>(), row[4].as<string>());
+		}
+
+		return values;
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
+		return nullptr;
+	}
 }
