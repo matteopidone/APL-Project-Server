@@ -13,6 +13,11 @@ namespace models {
 		tm date;
 		int type;
 		string message;
+		enum AllowedHolidayType {
+  			Pending = 0,
+  			Accepted = 1,
+  			Refused = 2
+		};
 
 	public:
 		// Constructor
@@ -26,7 +31,10 @@ namespace models {
 		string getMessage() const;
 
 		// Functions
-		static Holiday * getUserHolidays(const string email, int * size);
+		static Holiday * getAllUserHolidays(const string email, int * size);
 		static bool insertUserHoliday(const string email, const tm date, const string message = "");
+		static bool isAlreadyRequested(const string &email, const tm &date);
+		static bool updateUserHoliday(const string &email, const tm &date, const int &type);
+		static bool isValidTypeHoliday(const int &value);
 	};
 }

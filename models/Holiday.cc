@@ -18,8 +18,15 @@ int Holiday::getType() const { return this->type; }
 string Holiday::getMessage() const { return this->message; }
 
 // Functions
+bool Holiday::isValidTypeHoliday(const int &value){
+	if (value != AllowedHolidayType::Pending && value != AllowedHolidayType::Accepted && value != AllowedHolidayType::Refused ) {
+    	return false;
+    }
 
-Holiday * Holiday::getUserHolidays(const string email, int * size) {
+    return true;
+}
+
+Holiday * Holiday::getAllUserHolidays(const string email, int * size) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -60,8 +67,50 @@ bool Holiday::insertUserHoliday(const string email, const tm date, const string 
 
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
-
 		return true;
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
+		return false;
+	}
+}
+
+bool Holiday::isAlreadyRequested(const string &email, const tm &date){
+	try {
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+
+		string str_date = to_string(date.tm_year + 1900) + "-" + to_string(date.tm_mon + 1) + "-" + to_string(date.tm_mday);
+		string query = "SELECT * FROM holidays WHERE id_user='" + email + "' AND date ='" + str_date + "'";
+
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
+
+		int size = result.size();
+		if (!size) {
+			return false;
+		} else {
+			return true;
+		}
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
+		return false;
+	}
+}
+
+bool Holiday::updateUserHoliday(const string &email, const tm &date, const int &type) {
+	try {
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+
+		string date_string = to_string(date.tm_year + 1900) + "-" + to_string(date.tm_mon + 1) + "-" + to_string(date.tm_mday);
+		string query = "UPDATE holidays SET type = " + to_string(type) + " WHERE id_user = '" + email + "' AND date = '" + date_string + "'";
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
+
+		if ( result.affectedRows() > 0 ) {
+			return true;
+		}
+		return false;
 
 	} catch (const exception &e) {
 		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
