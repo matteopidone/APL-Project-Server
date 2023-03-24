@@ -67,7 +67,10 @@ bool Holiday::insertUserHoliday(const string email, const tm date, const string 
 
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
-		return true;
+		if ( result.affectedRows() > 0 ) {
+			return true;
+		}
+		return false;
 
 	} catch (const exception &e) {
 		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
