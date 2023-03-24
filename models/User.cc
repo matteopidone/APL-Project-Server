@@ -86,11 +86,12 @@ User * User::getAllUsers(int &size) {
 			return nullptr;
 		}
 		User * values = new User[size];
-
-		int i = 0;
-		tm date = {};
-		for (const drogon::orm::Row row : result) {
-			values[i++] = User(row[0].as<string>(), row[1].as<string>(), row[2].as<string>(), row[3].as<string>(), row[4].as<string>());
+		
+		//Itero la collezione con l'iteratore associato a Result.
+		int n = 0;
+		for (drogon::orm::Result::iterator it = result.begin(); it != result.end() ; it++){
+			
+			values[n++] = User((*it)[0].as<string>(), (*it)[1].as<string>(), (*it)[2].as<string>(), (*it)[3].as<string>(), (*it)[4].as<string>());
 		}
 
 		return values;
