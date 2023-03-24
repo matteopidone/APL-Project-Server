@@ -15,7 +15,7 @@ namespace models {
 			string role;
 			enum AllowedRole {
   				Dependent = 0,
-  				Amdministrator = 1,
+  				Administrator = 1,
 			};
 
 		public:

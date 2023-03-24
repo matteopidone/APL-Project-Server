@@ -62,7 +62,7 @@ string * User::get(const string &email) {
 }
 
 bool User::isAdministrator(const string &email) {
-	int adminType = AllowedRole::Amdministrator;
+	int adminType = AllowedRole::Administrator;
 	drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
 	string query = "SELECT * FROM users WHERE email='" + email + "' and role =" + to_string(adminType);
