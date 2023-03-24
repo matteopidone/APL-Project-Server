@@ -17,6 +17,6 @@ namespace api {
 			METHOD_LIST_END
 
 			void getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email);
-			void insertHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);		
+			void insertHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);			
 	};
 }

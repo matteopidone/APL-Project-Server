@@ -13,9 +13,14 @@ namespace models {
 			string name;
 			string surname;
 			string role;
+			enum AllowedRole {
+  				Dependent = 0,
+  				Administrator = 1,
+			};
 
 		public:
 			// Constructor
+			User();
 			User(string email, string password, string name, string surname, string role);
 
 			// Getters
@@ -26,8 +31,10 @@ namespace models {
 			string getRole() const;
 
 			// Functions
-			static void create(string email, string password, string name, string surname, string role);
+			static bool create(const string &email, const string &password, const string &name, const string &surname, const string &role);
 			static bool find(const string &email, const string &password);
+			static bool isAdministrator(const string &email);
+			static User * getAllUsers(int &size);
 			static string * get(const string &email);
 	};
 }

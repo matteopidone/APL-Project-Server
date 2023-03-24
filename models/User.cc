@@ -3,6 +3,7 @@
 using namespace models;
 
 // Constructor
+User::User() {}
 User::User(string email, string password, string name, string surname, string role) {
 	this->email = email;
 	this->password = password;
@@ -20,8 +21,20 @@ string User::getRole() const { return this->role; }
 
 // Functions
 
-void User::create(string email, string password, string name, string surname, string role) {
+bool User::create(const string &email, const string &password, const string &name, const string &surname, const string &role) {
+	try {
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
+		string query = "INSERT INTO users (email, password, name, surname, role) VALUES ('" + email + "', '" + password + "', '" + name + "', '" + surname + "', '" + role + "')";
+
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
+		return true;
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
+		return false;
+	}
 }
 
 bool User::find(const string &email, const string &password) {
@@ -46,4 +59,45 @@ string * User::get(const string &email) {
 	data[1] = result[0]["surname"].as<string>();
 
 	return data;
+}
+
+bool User::isAdministrator(const string &email) {
+	int adminType = AllowedRole::Administrator;
+	drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+
+	string query = "SELECT * FROM users WHERE email='" + email + "' and role =" + to_string(adminType);
+	future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+	drogon::orm::Result result = future.get();
+
+	return (bool)result.size();
+}
+
+User * User::getAllUsers(int &size) {
+	try {
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+
+		string query = "SELECT email, password, name, surname, role FROM users WHERE role='" + to_string(AllowedRole::Dependent) + "'";
+
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
+
+		size = result.size();
+		if (!size) {
+			return nullptr;
+		}
+		User * values = new User[size];
+		
+		//Itero la collezione con l'iteratore associato a Result.
+		int n = 0;
+		for (drogon::orm::Result::iterator it = result.begin(); it != result.end() ; it++){
+			
+			values[n++] = User((*it)[0].as<string>(), (*it)[1].as<string>(), (*it)[2].as<string>(), (*it)[3].as<string>(), (*it)[4].as<string>());
+		}
+
+		return values;
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
+		return nullptr;
+	}
 }
