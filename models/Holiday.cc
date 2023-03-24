@@ -41,6 +41,7 @@ Holiday * Holiday::getAllUserHolidays(const string email, int * size) {
 		}
 		Holiday * values = new Holiday[*size];
 
+		//Itero la collezione con l'iteratore associato a Result.
 		int i = 0;
 		tm date = {};
 		for (drogon::orm::Result::iterator it = result.begin(); it != result.end() ; it++){
