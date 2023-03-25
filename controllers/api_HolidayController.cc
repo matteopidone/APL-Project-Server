@@ -8,7 +8,7 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 	
 	string auth_field = req->getHeader("Authorization");
 
-	// Metodo ereditato da Auth.
+	// Metodo ereditato da Utility.
     if ( !validate_token(auth_field, JWT_SECRET) ) {
 		// Se non è valido restituisco una risposta di errore.
 		resp = HttpResponse::newHttpResponse();

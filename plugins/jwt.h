@@ -9,15 +9,18 @@ using namespace std;
 
 namespace aplutils
 {
+/*
+ * Questa classe implementa metodi per la costruzione e validazione di un Json Web Token. 
+*/
 class JWT
 {
   private:
     string algoritm;
   public:
-    string decode(const std::string &in);
-    string encode(const std::string &in);
-    bool verify_jwt(const std::string &jwt, const std::string &secret);
-    string generate_jwt(const std::string &payload, const std::string &secret);
+    string decode(const string &in);
+    string encode(const string &in);
+    bool verify_jwt(const string &jwt, const string &secret);
+    string generate_jwt(const string &payload, const string &secret);
     JWT(const string &a){
       this->algoritm = a;
     };
