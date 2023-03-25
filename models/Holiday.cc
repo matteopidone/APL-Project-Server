@@ -26,7 +26,7 @@ bool Holiday::isValidTypeHoliday(const int &value){
     return true;
 }
 
-Holiday * Holiday::getAllUserHolidays(const string email, int &size) {
+Holiday * Holiday::getAllUserHolidays(const string &email, int &size) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -59,7 +59,7 @@ Holiday * Holiday::getAllUserHolidays(const string email, int &size) {
 	}
 }
 
-bool Holiday::insertUserHoliday(const string email, const tm date, const string message) {
+bool Holiday::insertUserHoliday(const string &email, const tm &date, const string &message) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
