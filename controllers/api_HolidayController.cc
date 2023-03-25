@@ -27,7 +27,7 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 	}
 
 	int size;
-	models::Holiday * values = models::Holiday::getAllUserHolidays(email, &size);
+	models::Holiday * values = models::Holiday::getAllUserHolidays(email, size);
 
 	if ( !size ) {
 		result["holidays"] = "There are no requests.";

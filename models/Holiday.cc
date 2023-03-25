@@ -26,7 +26,7 @@ bool Holiday::isValidTypeHoliday(const int &value){
     return true;
 }
 
-Holiday * Holiday::getAllUserHolidays(const string email, int * size) {
+Holiday * Holiday::getAllUserHolidays(const string email, int &size) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -35,11 +35,11 @@ Holiday * Holiday::getAllUserHolidays(const string email, int * size) {
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
 
-		*size = result.size();
-		if (!*size) {
+		size = result.size();
+		if (!size) {
 			return nullptr;
 		}
-		Holiday * values = new Holiday[*size];
+		Holiday * values = new Holiday[size];
 
 		//Itero la collezione con l'iteratore associato a Result.
 		int i = 0;
