@@ -2,14 +2,14 @@
 
 #include <drogon/HttpController.h>
 #include "../models/Holiday.h"
-#include "../plugins/auth.h"
+#include "../plugins/utility.h"
 
 using namespace drogon;
 using namespace std;
 using namespace aplutils;
 
 namespace api {
-	class HolidayController : public drogon::HttpController<HolidayController>, public Auth {
+	class HolidayController : public drogon::HttpController<HolidayController>, public Utility {
 		public:
 			METHOD_LIST_BEGIN
 			ADD_METHOD_TO(HolidayController::getHolidays, PATH_GET_HOLIDAYS, Get);

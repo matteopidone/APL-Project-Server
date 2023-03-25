@@ -7,7 +7,7 @@ using namespace std;
 
 namespace aplutils
 {
-class Auth
+class Utility
 {
   private:
     JWT jwtobj = JWT("HS256");
