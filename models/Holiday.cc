@@ -28,7 +28,7 @@ bool Holiday::isValidTypeHoliday(const int value){
 
 Holiday * Holiday::getAllUserHolidays(const string email, int &size) {
 	try {
-		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
 
 		string query = "SELECT date, type, message FROM holidays WHERE id_user='" + email + "'";
 
@@ -61,7 +61,7 @@ Holiday * Holiday::getAllUserHolidays(const string email, int &size) {
 
 bool Holiday::insertUserHoliday(const string email, const tm date, const string message) {
 	try {
-		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
 
 		string new_date = to_string(date.tm_year + 1900) + "-" + to_string(date.tm_mon + 1) + "-" + to_string(date.tm_mday);
 		string query = "INSERT INTO holidays(id_user, date, type, message) VALUES ('" + email + "','" + new_date + "',0,'" + message + "') ON DUPLICATE KEY UPDATE type=0";
@@ -81,7 +81,7 @@ bool Holiday::insertUserHoliday(const string email, const tm date, const string 
 
 bool Holiday::isAlreadyRequested(const string email, const tm date){
 	try {
-		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
 
 		string str_date = to_string(date.tm_year + 1900) + "-" + to_string(date.tm_mon + 1) + "-" + to_string(date.tm_mday);
 		string query = "SELECT * FROM holidays WHERE id_user='" + email + "' AND date ='" + str_date + "'";
@@ -104,7 +104,7 @@ bool Holiday::isAlreadyRequested(const string email, const tm date){
 
 bool Holiday::updateUserHoliday(const string email, const tm date, const int type) {
 	try {
-		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
 
 		string date_string = to_string(date.tm_year + 1900) + "-" + to_string(date.tm_mon + 1) + "-" + to_string(date.tm_mday);
 		string query = "UPDATE holidays SET type = " + to_string(type) + " WHERE id_user = '" + email + "' AND date = '" + date_string + "'";
