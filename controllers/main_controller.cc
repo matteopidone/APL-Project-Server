@@ -5,7 +5,7 @@ using namespace std;
 void main_controller::asyncHandleHttpRequest(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback)
 {
     auto resp=HttpResponse::newHttpResponse();
-    auto clientPtr = drogon::app().getDbClient("Matteo");
+    auto clientPtr = drogon::app().getDbClient("apl_db_client");
     auto f = clientPtr->execSqlAsyncFuture("select * from users");
     auto result = f.get(); // Block until we get the result or catch the exception;
     string a = "pippo";

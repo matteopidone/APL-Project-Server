@@ -25,7 +25,7 @@ string User::getRole() const { return this->role; }
 
 bool User::create(const string email, const string password, const string name, const string surname, const string description, const string role) {
 	try {
-		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
 
 		string query = "INSERT INTO users (email, password, name, surname, description, role) VALUES ('" + email + "', '" + password + "', '" + name + "', '" + surname + "', '" + description + "', '" + role + "')";
 
@@ -45,7 +45,7 @@ bool User::create(const string email, const string password, const string name, 
 
 bool User::find(const string email, const string password) {
 	try {
-		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
 
 		string query = "SELECT email FROM users WHERE email='" + email + "' AND password='" + password + "'";
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
@@ -61,7 +61,7 @@ bool User::find(const string email, const string password) {
 
 string * User::getUserInfo(const string email) {
 	try {
-		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
 
 		string query = "SELECT name, surname, description FROM users WHERE email='" + email + "'";
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
@@ -83,7 +83,7 @@ string * User::getUserInfo(const string email) {
 bool User::isAdministrator(const string email) {
 	try {
 		int adminType = AllowedRole::Administrator;
-		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
 
 		string query = "SELECT * FROM users WHERE email='" + email + "' and role =" + to_string(adminType);
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
@@ -99,7 +99,7 @@ bool User::isAdministrator(const string email) {
 
 User * User::getAllUsers(int &size) {
 	try {
-		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
 
 		string query = "SELECT email, password, name, surname, description, role FROM users WHERE role='" + to_string(AllowedRole::Dependent) + "'";
 
