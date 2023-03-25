@@ -21,6 +21,7 @@ void UserController::insertUser(const HttpRequestPtr &req, std::function<void(co
     string psw = parameters["password"].asString();
     string name = parameters["name"].asString();
     string surname = parameters["surname"].asString();
+    string description = parameters["description"].asString();
     string role = parameters["role"].asString();
     
     if( !validate_email(email) ){
@@ -34,7 +35,7 @@ void UserController::insertUser(const HttpRequestPtr &req, std::function<void(co
     }
 
     try {
-        bool inserted = models::User::create(email, psw, name, surname, role);
+        bool inserted = models::User::create(email, psw, name, surname, description, role);
         
         //Se l'utente non è stato inserito rispondo con status code 400.
         if( !inserted ){
