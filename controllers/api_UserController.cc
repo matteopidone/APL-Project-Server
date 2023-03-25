@@ -192,7 +192,7 @@ void UserController::updateRequest(const HttpRequestPtr &req, std::function<void
     }
 }
 
-void UserController::getAllUserHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string &email) {
+void UserController::getAllUserHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email) {
     HttpResponsePtr resp;
     Json::Value result;
     try {

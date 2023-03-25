@@ -23,7 +23,7 @@ class UserController : public drogon::HttpController<UserController>, public Uti
 
     void login(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
     void updateRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
-    void getAllUserHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string &email);
+    void getAllUserHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email);
     void insertUser(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
 
 };

@@ -18,7 +18,7 @@ int Holiday::getType() const { return this->type; }
 string Holiday::getMessage() const { return this->message; }
 
 // Functions
-bool Holiday::isValidTypeHoliday(const int &value){
+bool Holiday::isValidTypeHoliday(const int value){
 	if (value != AllowedHolidayType::Pending && value != AllowedHolidayType::Accepted && value != AllowedHolidayType::Refused ) {
     	return false;
     }
@@ -26,7 +26,7 @@ bool Holiday::isValidTypeHoliday(const int &value){
     return true;
 }
 
-Holiday * Holiday::getAllUserHolidays(const string &email, int &size) {
+Holiday * Holiday::getAllUserHolidays(const string email, int &size) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -59,7 +59,7 @@ Holiday * Holiday::getAllUserHolidays(const string &email, int &size) {
 	}
 }
 
-bool Holiday::insertUserHoliday(const string &email, const tm &date, const string &message) {
+bool Holiday::insertUserHoliday(const string email, const tm date, const string message) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -79,7 +79,7 @@ bool Holiday::insertUserHoliday(const string &email, const tm &date, const strin
 	}
 }
 
-bool Holiday::isAlreadyRequested(const string &email, const tm &date){
+bool Holiday::isAlreadyRequested(const string email, const tm date){
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -102,7 +102,7 @@ bool Holiday::isAlreadyRequested(const string &email, const tm &date){
 	}
 }
 
-bool Holiday::updateUserHoliday(const string &email, const tm &date, const int &type) {
+bool Holiday::updateUserHoliday(const string email, const tm date, const int type) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
