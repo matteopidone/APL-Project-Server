@@ -21,15 +21,19 @@ string User::getRole() const { return this->role; }
 
 // Functions
 
-bool User::create(const string &email, const string &password, const string &name, const string &surname, const string &role) {
+bool User::create(const string &email, const string &password, const string &name, const string &surname, const string &description, const string &role) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-		string query = "INSERT INTO users (email, password, name, surname, role) VALUES ('" + email + "', '" + password + "', '" + name + "', '" + surname + "', '" + role + "')";
+		string query = "INSERT INTO users (email, password, name, surname, description, role) VALUES ('" + email + "', '" + password + "', '" + name + "', '" + surname + "', '" + description + "', '" + role + "')";
 
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
-		return true;
+		
+		if ( result.affectedRows() > 0 ) {
+			return true;
+		}
+		return false;
 
 	} catch (const exception &e) {
 		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
