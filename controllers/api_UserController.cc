@@ -23,12 +23,12 @@ void UserController::insertUser(const HttpRequestPtr &req, std::function<void(co
     string surname = parameters["surname"].asString();
     string description = parameters["description"].asString();
     string role = parameters["role"].asString();
-    
+
     if( !validate_email(email) ){
         //Se la mail non è valida rispondo con status code 400.
 		result["error"] = "Invalid email.";
 		resp = HttpResponse::newHttpJsonResponse(result);
-        resp->setStatusCode(k400BadRequest);     
+        resp->setStatusCode(k400BadRequest);
         callback(resp);
         return;
 
@@ -36,12 +36,12 @@ void UserController::insertUser(const HttpRequestPtr &req, std::function<void(co
 
     try {
         bool inserted = models::User::create(email, psw, name, surname, description, role);
-        
+
         //Se l'utente non è stato inserito rispondo con status code 400.
         if( !inserted ){
             result["error"] = "User not inserted.";
 		    resp = HttpResponse::newHttpJsonResponse(result);
-            resp->setStatusCode(k400BadRequest);     
+            resp->setStatusCode(k400BadRequest);
             callback(resp);
             return;
         }
@@ -58,18 +58,18 @@ void UserController::insertUser(const HttpRequestPtr &req, std::function<void(co
         resp->setStatusCode(k500InternalServerError);
         callback(resp);
         return;
-    }    
+    }
 }
 
 void UserController::login(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
     HttpResponsePtr resp;
     Json::Value result;
-    
+
     try {
         // Prendo i parametri della richiesta.
         Json::Value parameters = *(req->getJsonObject());
         string email = parameters["email"].asString();
-        
+
         if( !validate_email(email) ){
             //Se la mail non è valida rispondo con status code 400.
 		    result["error"] = "Invalid email.";
@@ -83,7 +83,7 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
         string password = parameters["password"].asString();
 
         bool found = models::User::find(email, password);
-        
+
         if( ! found ) {
             //Se non trovo l'utente rispondo con status code 400.
             result["error"] = "User not found.";
@@ -92,11 +92,11 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
             callback(resp);
             return;
         }
-        
+
         result["found"] = found;
-        
-        string * user_info = models::User::get(email);
-        
+
+        string * user_info = models::User::getUserInfo(email);
+
         result["name"] = user_info[0];
         result["surname"] = user_info[1];
         result["email"] = email;
@@ -142,12 +142,12 @@ void UserController::updateRequest(const HttpRequestPtr &req, std::function<void
     int month = parameters["month"].asInt();
     int day = parameters["day"].asInt();
     int type = parameters["type"].asInt();
-    
+
     if( !validate_email(email) ){
         //Se la mail non è valida rispondo con status code 400.
         result["error"] = "Invalid email.";
         resp = HttpResponse::newHttpJsonResponse(result);
-        resp->setStatusCode(k400BadRequest);     
+        resp->setStatusCode(k400BadRequest);
         callback(resp);
         return;
     }
@@ -164,7 +164,7 @@ void UserController::updateRequest(const HttpRequestPtr &req, std::function<void
             if( !updated ){
                 result["error"] = "Request has not been updated.";
                 resp = HttpResponse::newHttpJsonResponse(result);
-                resp->setStatusCode(k400BadRequest);     
+                resp->setStatusCode(k400BadRequest);
                 callback(resp);
                 return;
             }
