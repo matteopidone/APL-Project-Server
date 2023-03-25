@@ -19,7 +19,8 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 	
 	if( !validate_email(email) ){
 		//Se la mail non è valida rispondo con status code 400.
-		resp = HttpResponse::newHttpResponse();
+		result["error"] = "Invalid email.";
+		resp = HttpResponse::newHttpJsonResponse(result);
 		resp->setStatusCode(k400BadRequest);
 		callback(resp);
 		return;
@@ -28,7 +29,8 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 	int size;
 	models::Holiday * values = models::Holiday::getAllUserHolidays(email, &size);
 
-	if (!size) {
+	if ( !size ) {
+		result["holidays"] = "There are no requests.";
 		resp = HttpResponse::newHttpJsonResponse(result);
 		resp->setStatusCode(k200OK);
 		callback(resp);
@@ -53,6 +55,7 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 
 void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
 	HttpResponsePtr resp;
+	Json::Value result;
 	string auth_field = req->getHeader("Authorization");
 
     if (!validate_token(auth_field, JWT_SECRET)) {
@@ -72,7 +75,8 @@ void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<v
 
 	if( !validate_email(email) ){
 		//Se la mail non è valida rispondo con status code 400.
-		resp = HttpResponse::newHttpResponse();
+		result["error"] = "Invalid email.";
+		resp = HttpResponse::newHttpJsonResponse(result);
 		resp->setStatusCode(k400BadRequest);
 		callback(resp);
 		return;
@@ -84,7 +88,8 @@ void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<v
 
 	if( models::Holiday::isAlreadyRequested(email, date) || !is_valid_day(date) ){
 		//Se è stata già inoltrata una richiesta per questa data, ritorno risposta con codice 400.
-		resp = HttpResponse::newHttpResponse();
+		result["error"] = "Holiday is already requested.";
+		resp = HttpResponse::newHttpJsonResponse(result);
 		resp->setStatusCode(k400BadRequest);
 		callback(resp);
 		return;
@@ -92,11 +97,10 @@ void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<v
 
 	bool res = models::Holiday::insertUserHoliday(email, date, message);
 
-	Json::Value result;
 	result["result"] = res;
 
 	if (!res) {
-		result["response"] = "Non è possibile creare la richiesta di ferie";
+		result["error"] = "Cannot create request.";
 		resp = HttpResponse::newHttpJsonResponse(result);
 		resp->setStatusCode(k500InternalServerError);
 		callback(resp);

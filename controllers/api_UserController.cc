@@ -4,6 +4,7 @@ using namespace api;
 
 void UserController::insertUser(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback){
     HttpResponsePtr resp;
+    Json::Value result;
     string auth_field = req->getHeader("Authorization");
 
     if (!validate_token(auth_field, JWT_SECRET)) {
@@ -24,21 +25,32 @@ void UserController::insertUser(const HttpRequestPtr &req, std::function<void(co
     
     if( !validate_email(email) ){
         //Se la mail non è valida rispondo con status code 400.
-        resp = HttpResponse::newHttpResponse();
+		result["error"] = "Invalid email.";
+		resp = HttpResponse::newHttpJsonResponse(result);
         resp->setStatusCode(k400BadRequest);     
         callback(resp);
         return;
 
     }
 
-    Json::Value result;
     try {
         bool inserted = models::User::create(email, psw, name, surname, role);
+        
+        //Se l'utente non è stato inserito rispondo con status code 400.
+        if( !inserted ){
+            result["error"] = "User not inserted.";
+		    resp = HttpResponse::newHttpJsonResponse(result);
+            resp->setStatusCode(k400BadRequest);     
+            callback(resp);
+            return;
+        }
+
         result["inserted"] = inserted;
         resp = HttpResponse::newHttpJsonResponse(result);
         resp->setStatusCode(k200OK);
         callback(resp);
         return;
+
     } catch (const exception &exception) {
         //Rispondo con status code 500.
         resp = HttpResponse::newHttpResponse();
@@ -50,56 +62,67 @@ void UserController::insertUser(const HttpRequestPtr &req, std::function<void(co
 
 void UserController::login(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
     HttpResponsePtr resp;
+    Json::Value result;
+    
     try {
         // Prendo i parametri della richiesta.
         Json::Value parameters = *(req->getJsonObject());
         string email = parameters["email"].asString();
+        
         if( !validate_email(email) ){
             //Se la mail non è valida rispondo con status code 400.
-            resp = HttpResponse::newHttpResponse();
+		    result["error"] = "Invalid email.";
+		    resp = HttpResponse::newHttpJsonResponse(result);
             resp->setStatusCode(k400BadRequest);
+            callback(resp);
+            return;
 
-        } else {
-
-            string password = parameters["password"].asString();
-            Json::Value result;
-
-            bool found = models::User::find(email, password);
-            result["found"] = found;
-            if( ! found ) {
-                //Se non trovo l'utente rispondo con status code 400.
-                resp = HttpResponse::newHttpResponse();
-                resp->setStatusCode(k400BadRequest);
-                callback(resp);
-                return;
-            }
-            string * user = models::User::get(email);
-            result["name"] = user[0];
-            result["surname"] = user[1];
-            result["email"] = email;
-
-            // Genero un JWT.
-            string jwt = generate_token(parameters, JWT_SECRET);
-            result["token"] = jwt;
-
-            // Elimino la memoria allocata.
-            delete[] user;
-            resp = HttpResponse::newHttpJsonResponse(result);
-            resp->setStatusCode(k200OK);
         }
+
+        string password = parameters["password"].asString();
+
+        bool found = models::User::find(email, password);
+        
+        if( ! found ) {
+            //Se non trovo l'utente rispondo con status code 400.
+            result["error"] = "User not found.";
+		    resp = HttpResponse::newHttpJsonResponse(result);
+            resp->setStatusCode(k400BadRequest);
+            callback(resp);
+            return;
+        }
+        
+        result["found"] = found;
+        
+        string * user = models::User::get(email);
+        
+        result["name"] = user[0];
+        result["surname"] = user[1];
+        result["email"] = email;
+
+        // Genero un JWT.
+        string jwt = generate_token(parameters, JWT_SECRET);
+        result["token"] = jwt;
+
+        // Elimino la memoria allocata.
+        delete[] user;
+        resp = HttpResponse::newHttpJsonResponse(result);
+        resp->setStatusCode(k200OK);
+        callback(resp);
+        return;
 
     } catch (const exception &exception) {
         //Rispondo con status code 500.
         resp = HttpResponse::newHttpResponse();
         resp->setStatusCode(k500InternalServerError);
+        callback(resp);
+        return;
     }
-    
-    callback(resp);
-    return;
 }
 
 void UserController::updateRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
     HttpResponsePtr resp;
+    Json::Value result;
     string auth_field = req->getHeader("Authorization");
 
     if (!validate_token(auth_field, JWT_SECRET)) {
@@ -120,28 +143,44 @@ void UserController::updateRequest(const HttpRequestPtr &req, std::function<void
     
     if( !validate_email(email) ){
         //Se la mail non è valida rispondo con status code 400.
-        resp = HttpResponse::newHttpResponse();
+        result["error"] = "Invalid email.";
+        resp = HttpResponse::newHttpJsonResponse(result);
         resp->setStatusCode(k400BadRequest);     
         callback(resp);
         return;
-
     }
+
     tm date = {};
     // Metodo implementato per tornare la data in formato struct tm.
     parse_tm(day, month, year, date);
 
-    Json::Value result;
-
     try {
-
         if( models::Holiday::isAlreadyRequested(email, date) && models::Holiday::isValidTypeHoliday(type) ){
             bool updated = models::Holiday::updateUserHoliday(email, date, type);
+
+            //Se la richiesta non viene aggiornata rispondo con status code 400.
+            if( !updated ){
+                result["error"] = "Request has not been updated.";
+                resp = HttpResponse::newHttpJsonResponse(result);
+                resp->setStatusCode(k400BadRequest);     
+                callback(resp);
+                return;
+            }
+
             result["updated"] = updated;
             resp = HttpResponse::newHttpJsonResponse(result);
             resp->setStatusCode(k200OK);
             callback(resp);
             return;
         }
+
+        //Se la richiesta non è consistente rispondo con status code 400.
+        result["error"] = "Holidays is already requested or is not a valid type.";
+        resp = HttpResponse::newHttpJsonResponse(result);
+        resp->setStatusCode(k400BadRequest);
+        callback(resp);
+        return;
+
     } catch (const exception &exception) {
         //Rispondo con status code 500.
         resp = HttpResponse::newHttpResponse();
@@ -149,12 +188,6 @@ void UserController::updateRequest(const HttpRequestPtr &req, std::function<void
         callback(resp);
         return;
     }
-
-    //Se la richiesta non è consistente rispondo con status code 400.
-    resp = HttpResponse::newHttpResponse();
-    resp->setStatusCode(k400BadRequest);
-    callback(resp);
-    return;
 }
 
 void UserController::getAllUserHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string &email) {
@@ -171,10 +204,12 @@ void UserController::getAllUserHolidays(const HttpRequestPtr &req, std::function
             callback(resp);
             return;
         }
+
         // Controllo che la mail sia valida e che l'utente sia un amministratore;
         if( !validate_email(email) || !models::User::isAdministrator(email) ){
             //Rispondo con status code 400.
-            resp = HttpResponse::newHttpResponse();
+            result["error"] = "Invalid mail or email is not from an administrator.";
+            resp = HttpResponse::newHttpJsonResponse(result);
             resp->setStatusCode(k400BadRequest);
             callback(resp);
             return;
@@ -215,7 +250,14 @@ void UserController::getAllUserHolidays(const HttpRequestPtr &req, std::function
             }
             delete[] arrayHoliday;
         }
+
         delete[] arrayUsers;
+
+        resp = HttpResponse::newHttpJsonResponse(result);
+        resp->setStatusCode(k200OK);
+        callback(resp);
+        return;
+
     } catch ( const exception &exception ) {
         //Rispondo con status code 500.
         std::cout << exception.what() << endl;
@@ -225,8 +267,4 @@ void UserController::getAllUserHolidays(const HttpRequestPtr &req, std::function
         return;
     }
 
-	resp = HttpResponse::newHttpJsonResponse(result);
-	resp->setStatusCode(k200OK);
-	callback(resp);
-    return;
 }
