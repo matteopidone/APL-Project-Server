@@ -236,7 +236,7 @@ void UserController::getAllUserHolidays(const HttpRequestPtr &req, std::function
 
             int size_holiday;
             //Prendo tutte le richieste dell'utente.
-            models::Holiday * arrayHoliday = models::Holiday::getAllUserHolidays(mail, &size_holiday);
+            models::Holiday * arrayHoliday = models::Holiday::getAllUserHolidays(mail, size_holiday);
             if( !size_holiday ) {
                 //Se l'utente non ha fatto nessuna richiesta inserisco un'array di richieste vuoto.
                 result[i]["holidays"] = Json::arrayValue;

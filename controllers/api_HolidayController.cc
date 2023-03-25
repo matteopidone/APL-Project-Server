@@ -8,7 +8,7 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 	
 	string auth_field = req->getHeader("Authorization");
 
-	// Metodo ereditato da Auth.
+	// Metodo ereditato da Utility.
     if ( !validate_token(auth_field, JWT_SECRET) ) {
 		// Se non è valido restituisco una risposta di errore.
 		resp = HttpResponse::newHttpResponse();
@@ -27,7 +27,7 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 	}
 
 	int size;
-	models::Holiday * values = models::Holiday::getAllUserHolidays(email, &size);
+	models::Holiday * values = models::Holiday::getAllUserHolidays(email, size);
 
 	if ( !size ) {
 		result["holidays"] = "There are no requests.";

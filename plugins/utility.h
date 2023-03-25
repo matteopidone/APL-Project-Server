@@ -7,6 +7,9 @@ using namespace std;
 
 namespace aplutils
 {
+/*
+ * Questa classe definisce metodi di validazione e e generazione di un token, validazione mail e altri metodi di utility.
+*/
 class Utility
 {
   private:

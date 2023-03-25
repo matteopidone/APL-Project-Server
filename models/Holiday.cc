@@ -26,7 +26,7 @@ bool Holiday::isValidTypeHoliday(const int &value){
     return true;
 }
 
-Holiday * Holiday::getAllUserHolidays(const string email, int * size) {
+Holiday * Holiday::getAllUserHolidays(const string &email, int &size) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -35,20 +35,20 @@ Holiday * Holiday::getAllUserHolidays(const string email, int * size) {
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
 
-		*size = result.size();
-		if (!*size) {
+		size = result.size();
+		if (!size) {
 			return nullptr;
 		}
-		Holiday * values = new Holiday[*size];
+		Holiday * values = new Holiday[size];
 
 		//Itero la collezione con l'iteratore associato a Result.
 		int i = 0;
 		tm date = {};
 		for (drogon::orm::Result::iterator it = result.begin(); it != result.end() ; it++){
-			strptime((*it)[0].as<char*>(), "%Y-%m-%d", &date);
+			strptime((*it)["date"].as<char*>(), "%Y-%m-%d", &date);
 			date.tm_year += 1900;
 			date.tm_mon += 1;
-			values[i++] = Holiday(email, date, (*it)[1].as<int>(), (*it)[2].as<string>());
+			values[i++] = Holiday(email, date, (*it)["type"].as<int>(), (*it)["message"].as<string>());
 		}
 
 		return values;
@@ -59,7 +59,7 @@ Holiday * Holiday::getAllUserHolidays(const string email, int * size) {
 	}
 }
 
-bool Holiday::insertUserHoliday(const string email, const tm date, const string message) {
+bool Holiday::insertUserHoliday(const string &email, const tm &date, const string &message) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
