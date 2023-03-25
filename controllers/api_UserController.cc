@@ -2,65 +2,6 @@
 
 using namespace api;
 
-void UserController::insertUser(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback){
-    HttpResponsePtr resp;
-    Json::Value result;
-    string auth_field = req->getHeader("Authorization");
-
-    if (!validate_token(auth_field, JWT_SECRET)) {
-		// Se non è valido rispondo con codice 401.
-		resp = HttpResponse::newHttpResponse();
-		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
-		callback(resp);
-		return;
-    }
-
-    // Prendo i parametri della richiesta.
-    Json::Value parameters = *(req->getJsonObject());
-    string email = parameters["email"].asString();
-    string psw = parameters["password"].asString();
-    string name = parameters["name"].asString();
-    string surname = parameters["surname"].asString();
-    string description = parameters["description"].asString();
-    string role = parameters["role"].asString();
-
-    if( !validate_email(email) ){
-        //Se la mail non è valida rispondo con status code 400.
-		result["error"] = "Invalid email.";
-		resp = HttpResponse::newHttpJsonResponse(result);
-        resp->setStatusCode(k400BadRequest);
-        callback(resp);
-        return;
-
-    }
-
-    try {
-        bool inserted = models::User::create(email, psw, name, surname, description, role);
-
-        //Se l'utente non è stato inserito rispondo con status code 400.
-        if( !inserted ){
-            result["error"] = "User not inserted.";
-		    resp = HttpResponse::newHttpJsonResponse(result);
-            resp->setStatusCode(k400BadRequest);
-            callback(resp);
-            return;
-        }
-
-        result["inserted"] = inserted;
-        resp = HttpResponse::newHttpJsonResponse(result);
-        resp->setStatusCode(k200OK);
-        callback(resp);
-        return;
-
-    } catch (const exception &exception) {
-        //Rispondo con status code 500.
-        resp = HttpResponse::newHttpResponse();
-        resp->setStatusCode(k500InternalServerError);
-        callback(resp);
-        return;
-    }
-}
-
 void UserController::login(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
     HttpResponsePtr resp;
     Json::Value result;
@@ -108,6 +49,65 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
 
         // Elimino la memoria allocata.
         delete[] user_info;
+        resp = HttpResponse::newHttpJsonResponse(result);
+        resp->setStatusCode(k200OK);
+        callback(resp);
+        return;
+
+    } catch (const exception &exception) {
+        //Rispondo con status code 500.
+        resp = HttpResponse::newHttpResponse();
+        resp->setStatusCode(k500InternalServerError);
+        callback(resp);
+        return;
+    }
+}
+
+void UserController::insertUser(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback){
+    HttpResponsePtr resp;
+    Json::Value result;
+    string auth_field = req->getHeader("Authorization");
+
+    if (!validate_token(auth_field, JWT_SECRET)) {
+		// Se non è valido rispondo con codice 401.
+		resp = HttpResponse::newHttpResponse();
+		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
+		callback(resp);
+		return;
+    }
+
+    // Prendo i parametri della richiesta.
+    Json::Value parameters = *(req->getJsonObject());
+    string email = parameters["email"].asString();
+    string psw = parameters["password"].asString();
+    string name = parameters["name"].asString();
+    string surname = parameters["surname"].asString();
+    string description = parameters["description"].asString();
+    string role = parameters["role"].asString();
+
+    if( !validate_email(email) ){
+        //Se la mail non è valida rispondo con status code 400.
+		result["error"] = "Invalid email.";
+		resp = HttpResponse::newHttpJsonResponse(result);
+        resp->setStatusCode(k400BadRequest);
+        callback(resp);
+        return;
+
+    }
+
+    try {
+        bool inserted = models::User::create(email, psw, name, surname, description, role);
+
+        //Se l'utente non è stato inserito rispondo con status code 400.
+        if( !inserted ){
+            result["error"] = "User not inserted.";
+		    resp = HttpResponse::newHttpJsonResponse(result);
+            resp->setStatusCode(k400BadRequest);
+            callback(resp);
+            return;
+        }
+
+        result["inserted"] = inserted;
         resp = HttpResponse::newHttpJsonResponse(result);
         resp->setStatusCode(k200OK);
         callback(resp);
