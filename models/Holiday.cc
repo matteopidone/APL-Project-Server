@@ -45,10 +45,10 @@ Holiday * Holiday::getAllUserHolidays(const string email, int * size) {
 		int i = 0;
 		tm date = {};
 		for (drogon::orm::Result::iterator it = result.begin(); it != result.end() ; it++){
-			strptime((*it)[0].as<char*>(), "%Y-%m-%d", &date);
+			strptime((*it)["date"].as<char*>(), "%Y-%m-%d", &date);
 			date.tm_year += 1900;
 			date.tm_mon += 1;
-			values[i++] = Holiday(email, date, (*it)[1].as<int>(), (*it)[2].as<string>());
+			values[i++] = Holiday(email, date, (*it)["type"].as<int>(), (*it)["message"].as<string>());
 		}
 
 		return values;
