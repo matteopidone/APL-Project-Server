@@ -4,7 +4,7 @@ using namespace models;
 
 // Constructor
 User::User() {}
-User::User(string email, string password, string name, string surname, string description, string role) {
+User::User(const string email, const string password, const string name, const string surname, const string description, const string role) {
 	this->email = email;
 	this->password = password;
 	this->name = name;
@@ -23,7 +23,7 @@ string User::getRole() const { return this->role; }
 
 // Functions
 
-bool User::create(const string &email, const string &password, const string &name, const string &surname, const string &description, const string &role) {
+bool User::create(const string email, const string password, const string name, const string surname, const string description, const string role) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -31,7 +31,7 @@ bool User::create(const string &email, const string &password, const string &nam
 
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
-		
+
 		if ( result.affectedRows() > 0 ) {
 			return true;
 		}
@@ -43,7 +43,7 @@ bool User::create(const string &email, const string &password, const string &nam
 	}
 }
 
-bool User::find(const string &email, const string &password) {
+bool User::find(const string email, const string password) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -59,7 +59,7 @@ bool User::find(const string &email, const string &password) {
 	}
 }
 
-string * User::get(const string &email) {
+string * User::getUserInfo(const string email) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
@@ -80,7 +80,7 @@ string * User::get(const string &email) {
 	}
 }
 
-bool User::isAdministrator(const string &email) {
+bool User::isAdministrator(const string email) {
 	try {
 		int adminType = AllowedRole::Administrator;
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
@@ -111,11 +111,11 @@ User * User::getAllUsers(int &size) {
 			return nullptr;
 		}
 		User * values = new User[size];
-		
+
 		//Itero la collezione con l'iteratore associato a Result.
 		int n = 0;
 		for (drogon::orm::Result::iterator it = result.begin(); it != result.end() ; it++){
-			
+
 			values[n++] = User((*it)["email"].as<string>(), (*it)["password"].as<string>(), (*it)["name"].as<string>(), (*it)["surname"].as<string>(), (*it)["description"].as<string>(), (*it)["role"].as<string>());
 		}
 

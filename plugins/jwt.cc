@@ -4,7 +4,7 @@
 using namespace aplutils;
 
 //Funzione per la codifica Base64.
-string JWT::encode(const string &in) {
+string JWT::encode(const string in) {
     BIO *bio, *b64;
     BUF_MEM *bufferPtr;
 
@@ -24,7 +24,7 @@ string JWT::encode(const string &in) {
 }
 
 //Funzione per la decodifica Base64.
-string JWT::decode(const string &in) {
+string JWT::decode(const string in) {
     BIO *bio, *b64;
     char *buffer = (char *)calloc(in.length(), sizeof(char));
 
@@ -43,8 +43,8 @@ string JWT::decode(const string &in) {
 }
 
 //Funzione per generare il JWT.
-string JWT::generate_jwt(const string &payload, const string &secret) {
-    string encoded_header = this->encode("{\"alg\":\"HS256\",\"typ\":\"" + this->algoritm + "\"}");
+string JWT::generate_jwt(const string payload, const string secret) {
+    string encoded_header = this->encode("{\"alg\":\"HS256\",\"typ\":\"" + this->algorithm + "\"}");
     string data = encoded_header + "." + payload;
 
     unsigned char* hmac = HMAC(EVP_sha256(), secret.c_str(), secret.size(), (const unsigned char*)data.c_str(), data.size(), NULL, NULL);
@@ -57,7 +57,7 @@ string JWT::generate_jwt(const string &payload, const string &secret) {
 }
 
 //Funzione per verificare il JWT.
-bool JWT::verify_jwt(const string &jwt, const string &secret) {
+bool JWT::verify_jwt(const string jwt, const string secret) {
     size_t pos1 = jwt.find(".");
     if (pos1 == std::string::npos) return false;
     string encoded_header = jwt.substr(0, pos1);

@@ -22,7 +22,7 @@ namespace models {
 		public:
 			// Constructor
 			User();
-			User(string email, string password, string name, string surname, string description, string role);
+			User(const string email, const string password, const string name, const string surname, const string description, const string role);
 
 			// Getters
 			string getEmail() const;
@@ -33,10 +33,10 @@ namespace models {
 			string getRole() const;
 
 			// Functions
-			static bool create(const string &email, const string &password, const string &name, const string &surname, const string &description, const string &role);
-			static bool find(const string &email, const string &password);
-			static bool isAdministrator(const string &email);
+			static bool create(const string email, const string password, const string name, const string surname, const string description, const string role);
+			static bool find(const string email, const string password);
+			static bool isAdministrator(const string email);
 			static User * getAllUsers(int &size);
-			static string * get(const string &email);
+			static string * getUserInfo(const string email);
 	};
 }

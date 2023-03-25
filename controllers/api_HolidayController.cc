@@ -5,18 +5,18 @@ using namespace api;
 void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email) {
 	Json::Value result;
 	HttpResponsePtr resp;
-	
+
 	string auth_field = req->getHeader("Authorization");
 
 	// Metodo ereditato da Utility.
-    if ( !validate_token(auth_field, JWT_SECRET) ) {
+	if ( !validate_token(auth_field, JWT_SECRET) ) {
 		// Se non è valido restituisco una risposta di errore.
 		resp = HttpResponse::newHttpResponse();
 		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
 		callback(resp);
 		return;
-    }
-	
+	}
+
 	if( !validate_email(email) ){
 		//Se la mail non è valida rispondo con status code 400.
 		result["error"] = "Invalid email.";
@@ -58,13 +58,13 @@ void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<v
 	Json::Value result;
 	string auth_field = req->getHeader("Authorization");
 
-    if (!validate_token(auth_field, JWT_SECRET)) {
+	if (!validate_token(auth_field, JWT_SECRET)) {
 		// Se non è valido restituisco una risposta di errore.
 		resp = HttpResponse::newHttpResponse();
 		resp->setStatusCode(HttpStatusCode::k401Unauthorized);
 		callback(resp);
 		return;
-    }
+	}
 
 	Json::Value parameters = *(req->getJsonObject());
 	string email = parameters["email"].asString();
