@@ -3,7 +3,7 @@
 #include <drogon/HttpController.h>
 #include "../models/User.h"
 #include "../models/Holiday.h"
-#include "../plugins/auth.h"
+#include "../plugins/utility.h"
 
 using namespace drogon;
 using namespace std;
@@ -11,7 +11,7 @@ using namespace aplutils;
 
 namespace api
 {
-class UserController : public drogon::HttpController<UserController>, public Auth
+class UserController : public drogon::HttpController<UserController>, public Utility
 {
   public:
     METHOD_LIST_BEGIN

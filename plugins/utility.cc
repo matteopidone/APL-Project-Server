@@ -1,9 +1,9 @@
-#include "auth.h"
+#include "utility.h"
 #include <regex>
 
 using namespace aplutils;
 
-bool Auth::validate_token( string &auth_header, const string &secret ) {
+bool Utility::validate_token( string &auth_header, const string &secret ) {
 
     if (auth_header.empty()) {
 		return false;
@@ -21,7 +21,7 @@ bool Auth::validate_token( string &auth_header, const string &secret ) {
 	return true;
 }
 
-string Auth::generate_token(const Json::Value &json, const string &secret ){
+string Utility::generate_token(const Json::Value &json, const string &secret ){
     //StreamWriterBuilder per convertire da json a stringa
     Json::StreamWriterBuilder builder;
     
@@ -31,13 +31,13 @@ string Auth::generate_token(const Json::Value &json, const string &secret ){
     return jwt;
 }
 
-bool Auth::validate_email( const string &email ){
+bool Utility::validate_email( const string &email ){
     const regex email_regex(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
     return regex_match(email, email_regex);
 }
 //Funzione che dato un tempo, ritorna un booleano che indica se la data è valida per una richiesta, in particolare
 //è valida se: è successiva alla data di oggi e non è sabato e domenica.
-bool Auth::is_valid_day(tm time){
+bool Utility::is_valid_day(tm time){
 
     time_t now = std::time(nullptr);
     time_t t = std::mktime(&time);
@@ -53,7 +53,7 @@ bool Auth::is_valid_day(tm time){
     return true;
 }
 
-void Auth::parse_tm(const int &day, const int &month, const int &year, tm &time){
+void Utility::parse_tm(const int &day, const int &month, const int &year, tm &time){
     string string_date = to_string(year) + "-" + to_string(month) + "-" + to_string(day);
 	strptime(string_date.c_str(), "%Y-%m-%d", &time);
 }
