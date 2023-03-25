@@ -61,13 +61,14 @@ string * User::get(const string &email) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-		string query = "SELECT name, surname FROM users WHERE email='" + email + "'";
+		string query = "SELECT name, surname, description FROM users WHERE email='" + email + "'";
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
 
-		string * data = new string[2];
+		string * data = new string[3];
 		data[0] = result[0]["name"].as<string>();
 		data[1] = result[0]["surname"].as<string>();
+		data[2] = result[0]["description"].as<string>();
 
 		return data;
 

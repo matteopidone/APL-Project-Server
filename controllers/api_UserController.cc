@@ -95,18 +95,19 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
         
         result["found"] = found;
         
-        string * user = models::User::get(email);
+        string * user_info = models::User::get(email);
         
-        result["name"] = user[0];
-        result["surname"] = user[1];
+        result["name"] = user_info[0];
+        result["surname"] = user_info[1];
         result["email"] = email;
+        result["description"] = user_info[2];
 
         // Genero un JWT.
         string jwt = generate_token(parameters, JWT_SECRET);
         result["token"] = jwt;
 
         // Elimino la memoria allocata.
-        delete[] user;
+        delete[] user_info;
         resp = HttpResponse::newHttpJsonResponse(result);
         resp->setStatusCode(k200OK);
         callback(resp);
