@@ -41,13 +41,14 @@ Holiday * Holiday::getAllUserHolidays(const string email, int * size) {
 		}
 		Holiday * values = new Holiday[*size];
 
+		//Itero la collezione con l'iteratore associato a Result.
 		int i = 0;
 		tm date = {};
-		for (const drogon::orm::Row row : result) {
-			strptime(row[0].as<string>().c_str(), "%Y-%m-%d", &date);
+		for (drogon::orm::Result::iterator it = result.begin(); it != result.end() ; it++){
+			strptime((*it)[0].as<char*>(), "%Y-%m-%d", &date);
 			date.tm_year += 1900;
 			date.tm_mon += 1;
-			values[i++] = Holiday(email, date, row[1].as<int>(), row[2].as<string>());
+			values[i++] = Holiday(email, date, (*it)[1].as<int>(), (*it)[2].as<string>());
 		}
 
 		return values;
@@ -67,7 +68,10 @@ bool Holiday::insertUserHoliday(const string email, const tm date, const string 
 
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
-		return true;
+		if ( result.affectedRows() > 0 ) {
+			return true;
+		}
+		return false;
 
 	} catch (const exception &e) {
 		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;

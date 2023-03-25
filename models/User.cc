@@ -38,38 +38,56 @@ bool User::create(const string &email, const string &password, const string &nam
 }
 
 bool User::find(const string &email, const string &password) {
-	drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+	try {
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-	string query = "SELECT email FROM users WHERE email='" + email + "' AND password='" + password + "'";
-	future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
-	drogon::orm::Result result = future.get();
+		string query = "SELECT email FROM users WHERE email='" + email + "' AND password='" + password + "'";
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
 
-	return (bool)result.size();
+		return (bool)result.size();
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
+		return false;
+	}
 }
 
 string * User::get(const string &email) {
-	drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+	try {
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-	string query = "SELECT name, surname FROM users WHERE email='" + email + "'";
-	future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
-	drogon::orm::Result result = future.get();
+		string query = "SELECT name, surname FROM users WHERE email='" + email + "'";
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
 
-	string * data = new string[2];
-	data[0] = result[0]["name"].as<string>();
-	data[1] = result[0]["surname"].as<string>();
+		string * data = new string[2];
+		data[0] = result[0]["name"].as<string>();
+		data[1] = result[0]["surname"].as<string>();
 
-	return data;
+		return data;
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
+		return nullptr;
+	}
 }
 
 bool User::isAdministrator(const string &email) {
-	int adminType = AllowedRole::Administrator;
-	drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
+	try {
+		int adminType = AllowedRole::Administrator;
+		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-	string query = "SELECT * FROM users WHERE email='" + email + "' and role =" + to_string(adminType);
-	future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
-	drogon::orm::Result result = future.get();
+		string query = "SELECT * FROM users WHERE email='" + email + "' and role =" + to_string(adminType);
+		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
+		drogon::orm::Result result = future.get();
 
-	return (bool)result.size();
+		return (bool)result.size();
+
+	} catch (const exception &e) {
+		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
+		return false;
+	}
 }
 
 User * User::getAllUsers(int &size) {
