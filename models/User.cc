@@ -4,10 +4,11 @@ using namespace models;
 
 // Constructor
 User::User() {}
-User::User(string email, string password, string name, string surname, string role) {
+User::User(string email, string password, string name, string surname, string description, string role) {
 	this->email = email;
 	this->password = password;
 	this->name = name;
+	this->description = description;
 	this->surname = surname;
 	this->role = role;
 }
@@ -17,6 +18,7 @@ string User::getEmail() const { return this->email; }
 string User::getPassword() const { return this->password; }
 string User::getName() const { return this->name; }
 string User::getSurname() const { return this->surname; }
+string User::getDescription() const { return this->description; }
 string User::getRole() const { return this->role; }
 
 // Functions
@@ -99,7 +101,7 @@ User * User::getAllUsers(int &size) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("Matteo");
 
-		string query = "SELECT email, password, name, surname, role FROM users WHERE role='" + to_string(AllowedRole::Dependent) + "'";
+		string query = "SELECT email, password, name, surname, description, role FROM users WHERE role='" + to_string(AllowedRole::Dependent) + "'";
 
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
@@ -114,7 +116,7 @@ User * User::getAllUsers(int &size) {
 		int n = 0;
 		for (drogon::orm::Result::iterator it = result.begin(); it != result.end() ; it++){
 			
-			values[n++] = User((*it)[0].as<string>(), (*it)[1].as<string>(), (*it)[2].as<string>(), (*it)[3].as<string>(), (*it)[4].as<string>());
+			values[n++] = User((*it)["email"].as<string>(), (*it)["password"].as<string>(), (*it)["name"].as<string>(), (*it)["surname"].as<string>(), (*it)["description"].as<string>(), (*it)["role"].as<string>());
 		}
 
 		return values;

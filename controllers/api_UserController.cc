@@ -232,6 +232,7 @@ void UserController::getAllUserHolidays(const HttpRequestPtr &req, std::function
             result[i]["email"] = mail;
             result[i]["name"] = arrayUsers[i].getName();
             result[i]["surname"] = arrayUsers[i].getSurname();
+            result[i]["description"] = arrayUsers[i].getDescription();
 
             int size_holiday;
             //Prendo tutte le richieste dell'utente.
