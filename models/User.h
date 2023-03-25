@@ -12,6 +12,7 @@ namespace models {
 			string password;
 			string name;
 			string surname;
+			string description;
 			string role;
 			enum AllowedRole {
   				Dependent = 0,
@@ -21,13 +22,14 @@ namespace models {
 		public:
 			// Constructor
 			User();
-			User(string email, string password, string name, string surname, string role);
+			User(string email, string password, string name, string surname, string description, string role);
 
 			// Getters
 			string getEmail() const;
 			string getPassword() const;
 			string getName() const;
 			string getSurname() const;
+			string getDescription() const;
 			string getRole() const;
 
 			// Functions
