@@ -39,14 +39,12 @@ CREATE TABLE `holidays` (
 --
 
 INSERT INTO `holidays` (`id_user`, `date`, `type`, `message`) VALUES
-('pidonematteo@hotmail.it', '2023-03-27', '2', ''),
-('pidonematteo@hotmail.it', '2023-03-28', '1', ''),
-('pidonematteo@hotmail.it', '2023-03-29', '1', ''),
-('pidonematteo@hotmail.it', '2023-03-30', '0', ''),
-('pidonematteo@hotmail.it', '2023-03-31', '2', 'Mi secco a lavorare'),
-('pidonematteo@hotmail.it', '2023-04-07', '0', ''),
-('pidonematteo@hotmail.it', '2023-04-13', '0', ''),
-('pidonematteo@hotmail.it', '2023-04-14', '0', '');
+('pidonematteo@hotmail.it', '2023-03-27', '1', 'Motivi personali'),
+('pidonematteo@hotmail.it', '2023-03-28', '2', 'Impegni familiari'),
+('tomasprifti99@gmail.com', '2023-03-29', '2', 'Devo andare dal meccanico'),
+('tomasprifti99@gmail.com', '2023-04-13', '1', 'Visita oculistica'),
+('pidonematteo@hotmail.it', '2023-04-14', '0', 'Devo comprare casa');
+('tomasprifti99@gmail.com', '2023-04-14', '0', 'Devo accompagnare i miei figli');
 
 -- --------------------------------------------------------
 
@@ -68,10 +66,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`email`, `password`, `name`, `surname`, `description`, `role`) VALUES
-('pidonematteo2@hotmail.it', 'pippopluto', 'prova', 'prova', 'Programmatore informatico a tempo pieno presso TommiPri SrL', '0'),
-('pidonematteo@hotmail.it', 'prova', 'Matteo', 'Pidone', 'Programmatore informatico a tempo pieno presso TommiPri SrL', '0'),
-('pippo@pippo.it', 'poroew', 'Papero', 'Paperin', 'Programmatore informatico a tempo pieno presso TommiPri SrL', '0'),
-('prova@test.it', 'prova', 'Matteo', 'Pidone', 'Programmatore informatico a tempo pieno presso TommiPri SrL', '1');
+('pidonematteo@hotmail.it', 'password', 'Matteo', 'Pidone', 'Programmatore informatico a tempo pieno presso Digit SrL', '0'),
+('tomasprifti99@gmail.com', 'password', 'Tomas', 'Prifti', 'Data Analyst a tempo pieno presso Digit SrL', '0'),
+('digit@amministrazione.it', 'pswadmin', 'Mario', 'Rossi', 'Amministratore Delegato a tempo pieno presso Digit SrL', '1');
 
 --
 -- Indici per le tabelle scaricate
