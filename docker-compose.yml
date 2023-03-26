@@ -2,10 +2,10 @@ version: '3'
 services:
   drogon_app:
     build:
-      context: ./microservice_1
+      context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "9000:9000"
     depends_on:
       - mysql_db
     environment:

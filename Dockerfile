@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
 RUN apt-get update && \
-    apt-get install -y git build-essential cmake libssl-dev zlib1g-dev libcurl4-openssl-dev
+    apt-get install -y git gcc g++ build-essential cmake openssl libssl-dev zlib1g-dev libcurl4-openssl-dev libjsoncpp-dev libmariadb-dev uuid-dev
 
 RUN git clone https://github.com/an-tao/drogon.git && \
     cd drogon && \
@@ -18,6 +18,4 @@ WORKDIR /app/build
 RUN cmake ..
 RUN make
 
-EXPOSE 8080
-
-CMD ["./Apl-Project-Server"]
+CMD ["./APL-Project-Server"]
