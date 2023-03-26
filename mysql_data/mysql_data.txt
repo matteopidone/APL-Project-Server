@@ -1,1 +1,0 @@
-Directory dedicata al volume del container mysql.
