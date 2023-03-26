@@ -564,3 +564,4 @@ FodyWeavers.xsd
 config-commented.json
 
 build/
+config.json
