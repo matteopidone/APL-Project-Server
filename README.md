@@ -6,7 +6,7 @@ Tutte le classi utilizzate all'interno del progetto, sono suddivise in due file:
 -	File `.h` , per la definizione delle funzioni
 -	File `.cc` , per l'implementazione delle funzioni
 # Installazione ed Utilizzo
-Per utilizzare è necessario utilizzare Docker.<br>
+Per utilizzare il server è necessario Docker.<br>
 Dopo aver clonato il repository eseguire i seguenti comandi all'interno della directory del progetto:
 ```bash
 mkdir mysql_data
