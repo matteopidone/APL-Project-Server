@@ -1,0 +1,26 @@
+version: '3'
+services:
+  drogon_app:
+    build:
+      context: ./microservice_1
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql_db
+    environment:
+      - DB_HOST=mysql_db
+      - DB_NAME=apl
+      - DB_USER=apl
+      - DB_PASSWORD=password
+  mysql_db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: apl
+      MYSQL_USER: apl
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
