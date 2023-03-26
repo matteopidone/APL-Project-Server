@@ -21,7 +21,6 @@ L'entry point del progetto è il file `main.cc`.<br>
 Qui viene caricato a runtime il file di configurazione `config.json` e viene istanziato il server.
 
 Le directory principali sono:
--	`build` -> file relativi al build del progetto, tra cui l'eseguibile
 -	`controllers` -> controller che definiscono gli `endpoint` del server
 -	`models` -> model relativi alle strutture dati coinvolte
 -	`plugins` -> funzionalità aggiuntive del progetto
