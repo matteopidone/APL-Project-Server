@@ -5,13 +5,22 @@ Repository GitHub Framework Drogon: <a href="https://github.com/drogonframework/
 Tutte le classi utilizzate all'interno del progetto, sono suddivise in due file:
 -	File `.h` , per la definizione delle funzioni
 -	File `.cc` , per l'implementazione delle funzioni
+# Installazione ed Utilizzo
+Per utilizzare il server è necessario Docker.<br>
+Dopo aver clonato il repository eseguire i seguenti comandi all'interno della directory del progetto:
+```bash
+mkdir mysql_data
+docker compose up
+```
+In questo modo verranno creati due container.<br>
+Nel primo verranno installate le dipendenze del framework, verrà compilato il progetto e poi eseguito.<br>
+Nel secondo verrà installato il database `mysql` con un relativo dump. In questo modo saranno già disponibili alcuni dati relativi al progetto.
 
 # Struttura Progetto
 L'entry point del progetto è il file `main.cc`.<br>
 Qui viene caricato a runtime il file di configurazione `config.json` e viene istanziato il server.
 
 Le directory principali sono:
--	`build` -> file relativi al build del progetto, tra cui l'eseguibile
 -	`controllers` -> controller che definiscono gli `endpoint` del server
 -	`models` -> model relativi alle strutture dati coinvolte
 -	`plugins` -> funzionalità aggiuntive del progetto
