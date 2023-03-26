@@ -565,3 +565,4 @@ config-commented.json
 
 build/
 config.json
+mysql_data/

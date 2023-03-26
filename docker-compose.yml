@@ -8,6 +8,7 @@ services:
       - "9000:9000"
     depends_on:
       - mysql_db
+    restart: always
     environment:
       - DB_HOST=mysql_db
       - DB_NAME=apl
@@ -21,7 +22,5 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
     volumes:
-      - mysql_data:/var/lib/mysql
       - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
-  volumes:
-    mysql_data:
+      - ./mysql_data:/var/lib/mysql

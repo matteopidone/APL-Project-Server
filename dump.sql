@@ -44,7 +44,7 @@ INSERT INTO `holidays` (`id_user`, `date`, `type`, `message`) VALUES
 ('tomasprifti99@gmail.com', '2023-03-29', '2', 'Devo andare dal meccanico'),
 ('tomasprifti99@gmail.com', '2023-04-13', '1', 'Visita oculistica'),
 ('pidonematteo@hotmail.it', '2023-04-14', '0', 'Devo comprare casa');
-('tomasprifti99@gmail.com', '2023-04-14', '0', 'Devo accompagnare i miei figli');
+
 
 -- --------------------------------------------------------
 
