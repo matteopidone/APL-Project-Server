@@ -43,11 +43,11 @@ bool User::create(const string email, const string password, const string name, 
 	}
 }
 
-bool User::find(const string email, const string password) {
+bool User::find(const string email, const string password, const string role) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
 
-		string query = "SELECT email FROM users WHERE email='" + email + "' AND password='" + password + "'";
+		string query = "SELECT email FROM users WHERE email='" + email + "' AND password='" + password + "' AND role='" + role + "'";
 		future<drogon::orm::Result> future = database->execSqlAsyncFuture(query);
 		drogon::orm::Result result = future.get();
 

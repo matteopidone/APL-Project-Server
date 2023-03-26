@@ -22,8 +22,9 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
         }
 
         string password = parameters["password"].asString();
+		string role = parameters["role"].asString();
 
-        bool found = models::User::find(email, password);
+        bool found = models::User::find(email, password, role);
 
         if( ! found ) {
             //Se non trovo l'utente rispondo con status code 400.
