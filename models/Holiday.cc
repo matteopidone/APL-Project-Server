@@ -18,14 +18,8 @@ int Holiday::getType() const { return this->type; }
 string Holiday::getMessage() const { return this->message; }
 
 // Functions
-bool Holiday::isValidTypeHoliday(const int value){
-	if (value != AllowedHolidayType::Pending && value != AllowedHolidayType::Accepted && value != AllowedHolidayType::Refused ) {
-    	return false;
-    }
 
-    return true;
-}
-
+// Funzione per il recupero di tutte le richieste di ferie di un specifico utente
 Holiday * Holiday::getAllUserHolidays(const string email, int &size) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
@@ -59,6 +53,7 @@ Holiday * Holiday::getAllUserHolidays(const string email, int &size) {
 	}
 }
 
+// Funzione per l'inserimento di una richiesta ferie per uno specifico utente
 bool Holiday::insertUserHoliday(const string email, const tm date, const string message) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
@@ -79,6 +74,7 @@ bool Holiday::insertUserHoliday(const string email, const tm date, const string 
 	}
 }
 
+// Funzione per verificare se una richiesta ferie è già stata effettuata
 bool Holiday::isAlreadyRequested(const string email, const tm date){
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
@@ -102,6 +98,7 @@ bool Holiday::isAlreadyRequested(const string email, const tm date){
 	}
 }
 
+// Funzione per modificare lo stato di una richiesta ferie
 bool Holiday::updateUserHoliday(const string email, const tm date, const int type) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
@@ -120,4 +117,13 @@ bool Holiday::updateUserHoliday(const string email, const tm date, const int typ
 		cout << "Errore durante l'esecuzione della query: " << e.what() << endl;
 		return false;
 	}
+}
+
+// Funzione per verificare se una richiesta ferie si trova in uno stato valido
+bool Holiday::isValidTypeHoliday(const int value){
+	if (value != AllowedHolidayType::Pending && value != AllowedHolidayType::Accepted && value != AllowedHolidayType::Refused ) {
+    	return false;
+    }
+
+    return true;
 }

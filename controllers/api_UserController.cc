@@ -2,6 +2,7 @@
 
 using namespace api;
 
+// Funzione per la gestione del login di un utente
 void UserController::login(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
     HttpResponsePtr resp;
     Json::Value result;
@@ -64,6 +65,7 @@ void UserController::login(const HttpRequestPtr &req, std::function<void(const H
     }
 }
 
+// Funzione per la creazione di un nuovo utente
 void UserController::insertUser(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback){
     HttpResponsePtr resp;
     Json::Value result;
@@ -123,6 +125,7 @@ void UserController::insertUser(const HttpRequestPtr &req, std::function<void(co
     }
 }
 
+// Funzione per aggiornare lo stato di una richiesta ferie
 void UserController::updateRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
     HttpResponsePtr resp;
     Json::Value result;
@@ -193,6 +196,7 @@ void UserController::updateRequest(const HttpRequestPtr &req, std::function<void
     }
 }
 
+// Funzione per il recupero di tutte le richieste ferie di tutti gli utenti
 void UserController::getAllUserHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email) {
     HttpResponsePtr resp;
     Json::Value result;

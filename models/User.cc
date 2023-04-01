@@ -23,6 +23,7 @@ string User::getRole() const { return this->role; }
 
 // Functions
 
+// Funzione per l'inserimento di un utente
 bool User::create(const string email, const string password, const string name, const string surname, const string description, const string role) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
@@ -43,6 +44,7 @@ bool User::create(const string email, const string password, const string name, 
 	}
 }
 
+// Funzione per verificare l'esistenza di un utente
 bool User::find(const string email, const string password, const string role) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
@@ -59,6 +61,7 @@ bool User::find(const string email, const string password, const string role) {
 	}
 }
 
+// Funzione per il recupero delle informazioni di un utente
 string * User::getUserInfo(const string email) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");
@@ -80,6 +83,7 @@ string * User::getUserInfo(const string email) {
 	}
 }
 
+// Funzione per verificare se un utente è amministratore di sistema
 bool User::isAdministrator(const string email) {
 	try {
 		int adminType = AllowedRole::Administrator;
@@ -97,6 +101,7 @@ bool User::isAdministrator(const string email) {
 	}
 }
 
+// Funzione per il recupero di tutti gli utenti
 User * User::getAllUsers(int &size) {
 	try {
 		drogon::orm::DbClientPtr database = drogon::app().getDbClient("apl_db_client");

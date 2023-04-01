@@ -2,6 +2,7 @@
 
 using namespace api;
 
+// Funzione per il recupero di tutte le richieste ferie di uno specifico utente
 void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const string email) {
 	Json::Value result;
 	HttpResponsePtr resp;
@@ -53,6 +54,7 @@ void HolidayController::getHolidays(const HttpRequestPtr &req, std::function<voi
 	callback(resp);
 }
 
+// Funzione per l'inserimento di una richiesta ferie per uno specifico utente
 void HolidayController::insertHoliday(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
 	HttpResponsePtr resp;
 	Json::Value result;

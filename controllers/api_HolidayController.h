@@ -9,6 +9,9 @@ using namespace std;
 using namespace aplutils;
 
 namespace api {
+	/**
+	 * Classe controller per la gestione delle REST API relative alle Ferie
+	*/
 	class HolidayController : public drogon::HttpController<HolidayController>, public Utility {
 		public:
 			METHOD_LIST_BEGIN

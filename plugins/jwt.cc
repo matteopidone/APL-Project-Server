@@ -3,6 +3,25 @@
 
 using namespace aplutils;
 
+//Funzione per la decodifica Base64.
+string JWT::decode(const string in) {
+    BIO *bio, *b64;
+    char *buffer = (char *)calloc(in.length(), sizeof(char));
+
+    bio = BIO_new_mem_buf(in.c_str(), -1);
+    b64 = BIO_new(BIO_f_base64());
+    BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
+    bio = BIO_push(b64, bio);
+
+    BIO_read(bio, buffer, in.length());
+
+    BIO_free_all(bio);
+
+    string decoded(buffer);
+    free(buffer);
+    return decoded;
+}
+
 //Funzione per la codifica Base64.
 string JWT::encode(const string in) {
     BIO *bio, *b64;
@@ -21,25 +40,6 @@ string JWT::encode(const string in) {
 
     BIO_free_all(bio);
     return encoded;
-}
-
-//Funzione per la decodifica Base64.
-string JWT::decode(const string in) {
-    BIO *bio, *b64;
-    char *buffer = (char *)calloc(in.length(), sizeof(char));
-
-    bio = BIO_new_mem_buf(in.c_str(), -1);
-    b64 = BIO_new(BIO_f_base64());
-    BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
-    bio = BIO_push(b64, bio);
-
-    BIO_read(bio, buffer, in.length());
-
-    BIO_free_all(bio);
-
-    string decoded(buffer);
-    free(buffer);
-    return decoded;
 }
 
 //Funzione per generare il JWT.

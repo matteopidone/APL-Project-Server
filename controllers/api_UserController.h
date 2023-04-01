@@ -10,6 +10,9 @@ using namespace std;
 using namespace aplutils;
 
 namespace api {
+	/**
+	 * Classe controller per la gestione delle REST API relative agli Utenti
+	*/
 	class UserController : public drogon::HttpController<UserController>, public Utility {
 		public:
 			METHOD_LIST_BEGIN
